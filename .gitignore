@@ -1,0 +1,31 @@
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Composer
+vendor/
+composer.lock
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build files
+/build/
+/dist/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp

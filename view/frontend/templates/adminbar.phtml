@@ -1,0 +1,237 @@
+<?php
+/**
+ * @var \TH\Adminbar\Block\Adminbar $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+
+// Don't render if admin bar shouldn't be displayed
+if (!$block->shouldDisplay()) {
+    return;
+}
+
+$helper = $block->getAdminbarHelper();
+$currentProduct = $block->getCurrentProduct();
+$currentCategory = $block->getCurrentCategory();
+$currentCmsPage = $block->getCurrentCmsPage();
+
+// Debug information (remove in production)
+$debugInfo = $block->getDebugInfo();
+
+// URLs
+$adminDashboardUrl = $block->getAdminDashboardUrl();
+$cacheManagementUrl = $block->getCacheManagementUrl();
+$statusUrl = $block->getUrl('thadminbar/auth/status');
+
+// Configuration
+$position = $helper->getPosition();
+$backgroundColor = $helper->getBackgroundColor();
+$textColor = $helper->getTextColor();
+
+$positionClass = $position === 'bottom' ? 'bottom-0' : 'top-0';
+?>
+
+<div id="th-adminbar-wrapper">
+    <!-- Main Admin Bar -->
+    <div id="th-adminbar" style="display: none;">
+        <div class="th-adminbar-container <?= $escaper->escapeHtmlAttr($positionClass) ?>"
+         style="position: fixed; left: 0; right: 0; z-index: 9999; height: 32px; 
+                background-color: <?= $escaper->escapeHtmlAttr($backgroundColor) ?>; 
+                color: <?= $escaper->escapeHtmlAttr($textColor) ?>; 
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+                font-size: 13px; line-height: 32px; box-shadow: 0 1px 3px rgba(0,0,0,0.3);">
+        
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 16px; display: flex; align-items: center; height: 100%;">
+            
+            <!-- WordPress-style logo/home -->
+            <div style="margin-right: 16px;">
+                <a href="<?= $escaper->escapeUrl($adminDashboardUrl) ?>" 
+                   style="color: inherit; text-decoration: none; padding: 0 8px; height: 32px; display: inline-flex; align-items: center; font-weight: 600;"
+                   onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                   onmouseout="this.style.backgroundColor='transparent'">
+                    <?= $escaper->escapeHtml(__('Magento')) ?>
+                </a>
+            </div>
+
+            <!-- Context-aware actions -->
+            <div style="display: flex; align-items: center; margin-right: auto;">
+
+                <?php if ($currentProduct): ?>
+                    <a href="<?= $escaper->escapeUrl($block->getProductEditUrl($currentProduct->getId())) ?>"
+                       style="color: inherit; text-decoration: none; padding: 0 12px; height: 32px; display: inline-flex; align-items: center;"
+                       onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                       onmouseout="this.style.backgroundColor='transparent'">
+                        <?= $escaper->escapeHtml(__('Edit Product')) ?>
+                    </a>
+                <?php endif; ?>
+
+                <?php if ($currentCategory): ?>
+                    <a href="<?= $escaper->escapeUrl($block->getCategoryEditUrl($currentCategory->getId())) ?>"
+                       style="color: inherit; text-decoration: none; padding: 0 12px; height: 32px; display: inline-flex; align-items: center;"
+                       onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                       onmouseout="this.style.backgroundColor='transparent'">
+                        <?= $escaper->escapeHtml(__('Edit Category')) ?>
+                    </a>
+                <?php endif; ?>
+
+                <?php if ($currentCmsPage): ?>
+                    <a href="<?= $escaper->escapeUrl($block->getCmsPageEditUrl($currentCmsPage->getId())) ?>"
+                       style="color: inherit; text-decoration: none; padding: 0 12px; height: 32px; display: inline-flex; align-items: center;"
+                       onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                       onmouseout="this.style.backgroundColor='transparent'">
+                        <?= $escaper->escapeHtml(__('Edit Page')) ?>
+                    </a>
+                <?php endif; ?>
+
+                <a href="<?= $escaper->escapeUrl($cacheManagementUrl) ?>"
+                   style="color: inherit; text-decoration: none; padding: 0 12px; height: 32px; display: inline-flex; align-items: center;"
+                   onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                   onmouseout="this.style.backgroundColor='transparent'">
+                    <?= $escaper->escapeHtml(__('Cache')) ?>
+                </a>
+            </div>
+
+            <!-- Entity Details Section -->
+            <div id="th-entity-details" style="display: flex; align-items: center; margin-right: 16px; font-size: 11px;">
+                <?php if ($currentProduct): ?>
+                    <div style="background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px; margin-right: 8px;">
+                        <span style="color: #93c5fd; font-weight: 600;"><?= $escaper->escapeHtml(__('Product:')) ?></span>
+                        <span style="margin-left: 8px;"><?= $escaper->escapeHtml(__('ID: %1', $currentProduct->getId())) ?></span>
+                        <span style="margin-left: 8px; opacity: 0.7;">|</span>
+                        <span style="margin-left: 8px;"><?= $escaper->escapeHtml(__('SKU: %1', $currentProduct->getSku())) ?></span>
+                        <?php if ($currentProduct->getTypeId()): ?>
+                            <span style="margin-left: 8px; opacity: 0.7;">|</span>
+                            <span style="margin-left: 8px;"><?= $escaper->escapeHtml(__('Type: %1', ucfirst($currentProduct->getTypeId()))) ?></span>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($currentCategory): ?>
+                    <div style="background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px; margin-right: 8px;">
+                        <span style="color: #86efac; font-weight: 600;"><?= $escaper->escapeHtml(__('Category:')) ?></span>
+                        <span style="margin-left: 8px;"><?= $escaper->escapeHtml(__('ID: %1', $currentCategory->getId())) ?></span>
+                        <span style="margin-left: 8px; opacity: 0.7;">|</span>
+                        <span style="margin-left: 8px;"><?= $escaper->escapeHtml(__('Level: %1', $currentCategory->getLevel())) ?></span>
+                        <?php if ($currentCategory->getProductCount()): ?>
+                            <span style="margin-left: 8px; opacity: 0.7;">|</span>
+                            <span style="margin-left: 8px;"><?= $escaper->escapeHtml(__('Products: %1', $currentCategory->getProductCount())) ?></span>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($currentCmsPage): ?>
+                    <div style="background: rgba(255,255,255,0.1); padding: 4px 8px; border-radius: 4px; margin-right: 8px;">
+                        <span style="color: #c084fc; font-weight: 600;"><?= $escaper->escapeHtml(__('CMS Page:')) ?></span>
+                        <span style="margin-left: 8px;"><?= $escaper->escapeHtml(__('ID: %1', $currentCmsPage->getId())) ?></span>
+                        <span style="margin-left: 8px; opacity: 0.7;">|</span>
+                        <span style="margin-left: 8px;"><?= $escaper->escapeHtml(__('Identifier: %1', $currentCmsPage->getIdentifier())) ?></span>
+                    </div>
+                <?php elseif ($debugInfo['module'] === 'cms'): ?>
+                    <!-- Debug: Show when we should be detecting a CMS page -->
+                    <div style="background: rgba(255,0,0,0.2); padding: 4px 8px; border-radius: 4px; margin-right: 8px; font-size: 10px;">
+                        <span style="color: #ff6b6b; font-weight: 600;"><?= $escaper->escapeHtml(__('Debug:')) ?></span>
+                        <span style="margin-left: 8px;"><?= $escaper->escapeHtml(__('CMS Module: %1/%2', $debugInfo['controller'], $debugInfo['action'])) ?></span>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+            <!-- User info and actions -->
+            <div style="display: flex; align-items: center;">
+                <span id="th-admin-username" style="margin-right: 16px; opacity: 0.8; display: none;">
+                    <?= $escaper->escapeHtml(__('Hello, ')) ?><span id="th-username-text"></span>
+                </span>
+
+                <button onclick="toggleEntityDetails()"
+                        style="background: none; border: none; color: inherit; padding: 0 8px; height: 32px; cursor: pointer; opacity: 0.7; margin-right: 4px;"
+                        onmouseover="this.style.opacity='1'; this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                        onmouseout="this.style.opacity='0.7'; this.style.backgroundColor='transparent'"
+                        title="<?= $escaper->escapeHtmlAttr(__('Toggle Details')) ?>">
+                    ℹ
+                </button>
+
+                <button onclick="minimizeAdminBar()"
+                        style="background: none; border: none; color: inherit; padding: 0 8px; height: 32px; cursor: pointer; opacity: 0.7; margin-right: 4px;"
+                        onmouseover="this.style.opacity='1'; this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                        onmouseout="this.style.opacity='0.7'; this.style.backgroundColor='transparent'"
+                        title="<?= $escaper->escapeHtmlAttr(__('Minimize')) ?>">
+                    −
+                </button>
+
+                <button onclick="hideAdminBar()"
+                        style="background: none; border: none; color: inherit; padding: 0 8px; height: 32px; cursor: pointer; opacity: 0.7;"
+                        onmouseover="this.style.opacity='1'; this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                        onmouseout="this.style.opacity='0.7'; this.style.backgroundColor='transparent'"
+                        title="<?= $escaper->escapeHtmlAttr(__('Close')) ?>">
+                    ×
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Toggle Button -->
+    <div id="th-adminbar-toggle" style="display: none; position: fixed; <?= $position === 'bottom' ? 'bottom: 8px;' : 'top: 8px;' ?> right: 16px; z-index: 9999;">
+        <button onclick="restoreAdminBar()"
+                style="width: 40px; height: 32px; background-color: <?= $escaper->escapeHtmlAttr($backgroundColor) ?>; color: <?= $escaper->escapeHtmlAttr($textColor) ?>; border: none; border-radius: 4px; cursor: pointer; box-shadow: 0 2px 8px rgba(0,0,0,0.3); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px;"
+                onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                onmouseout="this.style.backgroundColor='<?= $escaper->escapeJs($backgroundColor) ?>'"
+                title="<?= $escaper->escapeHtmlAttr(__('Show Admin Bar')) ?>">
+            ☰
+        </button>
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+{
+    "*": {
+        "TH_Adminbar/js/adminbar": {
+            "statusUrl": "<?= $escaper->escapeJs($statusUrl) ?>"
+        }
+    }
+}
+</script>
+
+<script>
+// Toggle entity details visibility
+function toggleEntityDetails() {
+    var detailsElement = document.getElementById('th-entity-details');
+    if (detailsElement) {
+        detailsElement.style.display = detailsElement.style.display === 'none' ? 'flex' : 'none';
+    }
+}
+
+// Minimize admin bar (show floating button)
+function minimizeAdminBar() {
+    document.getElementById('th-adminbar').style.display = 'none';
+    document.getElementById('th-adminbar-toggle').style.display = 'block';
+}
+
+// Restore admin bar from minimized state
+function restoreAdminBar() {
+    document.getElementById('th-adminbar').style.display = 'block';
+    document.getElementById('th-adminbar-toggle').style.display = 'none';
+}
+
+// Hide admin bar completely
+function hideAdminBar() {
+    document.getElementById('th-adminbar').style.display = 'none';
+    document.getElementById('th-adminbar-toggle').style.display = 'none';
+}
+
+// Simple initialization for Luma theme
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.thAdminBarData) {
+        window.thAdminBarData.init();
+        // Show the bar if conditions are met
+        setTimeout(function() {
+            if (window.thAdminBarData.visible) {
+                document.getElementById('th-adminbar').style.display = 'block';
+
+                // Update username if available
+                if (window.thAdminBarData.userName) {
+                    document.getElementById('th-username-text').textContent = window.thAdminBarData.userName;
+                    document.getElementById('th-admin-username').style.display = 'block';
+                }
+            }
+        }, 100);
+    }
+});
+</script>

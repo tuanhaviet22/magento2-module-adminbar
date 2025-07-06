@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        php-version: [7.4, 8.1, 8.2, 8.3]
+        magento-version: [2.4.6, 2.4.7]
+    
+    name: PHP ${{ matrix.php-version }} - Magento ${{ matrix.magento-version }}
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: ${{ matrix.php-version }}
+        extensions: bcmath, ctype, curl, dom, gd, hash, iconv, intl, mbstring, openssl, pdo_mysql, simplexml, soap, xsl, zip
+        tools: composer:v2
+    
+    - name: Validate composer.json
+      run: composer validate --strict
+    
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v3
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ matrix.php-version }}-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-${{ matrix.php-version }}-
+    
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+    
+    - name: Run PHP CodeSniffer
+      run: |
+        if [ -f "vendor/bin/phpcs" ]; then
+          vendor/bin/phpcs --standard=Magento2 --ignore=vendor/ .
+        else
+          echo "PHP CodeSniffer not found, skipping..."
+        fi
+    
+    - name: Run PHP Mess Detector
+      run: |
+        if [ -f "vendor/bin/phpmd" ]; then
+          vendor/bin/phpmd . text cleancode,codesize,controversial,design,naming,unusedcode --exclude vendor/
+        else
+          echo "PHP Mess Detector not found, skipping..."
+        fi
+
+  security:
+    runs-on: ubuntu-latest
+    name: Security Check
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.1
+        tools: composer:v2
+    
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+    
+    - name: Run security check
+      run: |
+        if [ -f "vendor/bin/security-checker" ]; then
+          vendor/bin/security-checker security:check composer.lock
+        else
+          echo "Security checker not found, skipping..."
+        fi

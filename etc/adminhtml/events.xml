@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="backend_auth_user_login_success">
+        <observer name="th_adminbar_admin_login" instance="TH\Adminbar\Observer\AdminLoginObserver" />
+    </event>
+    <event name="admin_user_authenticate_after">
+        <observer name="th_adminbar_admin_authenticate" instance="TH\Adminbar\Observer\AdminLoginObserver" />
+    </event>
+    <event name="admin_session_user_logout">
+        <observer name="th_adminbar_admin_logout" instance="TH\Adminbar\Observer\AdminLogoutObserver" />
+    </event>
+    <event name="controller_action_predispatch">
+        <observer name="th_adminbar_admin_activity" instance="TH\Adminbar\Observer\AdminActivityObserver" />
+    </event>
+</config>
