@@ -274,6 +274,16 @@ class Adminbar extends Template
     }
 
     /**
+     * Get indexer management URL
+     *
+     * @return string
+     */
+    public function getIndexerManagementUrl(): string
+    {
+        return $this->getAdminUrl('indexer/indexer/list');
+    }
+
+    /**
      * Get admin URL for given path and parameters
      * Uses dynamic admin frontName from backend configuration
      *

@@ -16,9 +16,6 @@ class Data extends AbstractHelper
 {
     const XML_PATH_ENABLED = 'th_adminbar/general/enabled';
     const XML_PATH_SHOW_IN_PRODUCTION = 'th_adminbar/general/show_in_production';
-    const XML_PATH_POSITION = 'th_adminbar/general/position';
-    const XML_PATH_BACKGROUND_COLOR = 'th_adminbar/appearance/background_color';
-    const XML_PATH_TEXT_COLOR = 'th_adminbar/appearance/text_color';
 
     /**
      * @var State
@@ -129,48 +126,5 @@ class Data extends AbstractHelper
         return true;
     }
 
-    /**
-     * Get admin bar position
-     *
-     * @param int|null $storeId
-     * @return string
-     */
-    public function getPosition(?int $storeId = null): string
-    {
-        return $this->scopeConfig->getValue(
-            self::XML_PATH_POSITION,
-            ScopeInterface::SCOPE_STORE,
-            $storeId
-        ) ?: 'top';
-    }
 
-    /**
-     * Get background color
-     *
-     * @param int|null $storeId
-     * @return string
-     */
-    public function getBackgroundColor(?int $storeId = null): string
-    {
-        return $this->scopeConfig->getValue(
-            self::XML_PATH_BACKGROUND_COLOR,
-            ScopeInterface::SCOPE_STORE,
-            $storeId
-        ) ?: '#1f2937';
-    }
-
-    /**
-     * Get text color
-     *
-     * @param int|null $storeId
-     * @return string
-     */
-    public function getTextColor(?int $storeId = null): string
-    {
-        return $this->scopeConfig->getValue(
-            self::XML_PATH_TEXT_COLOR,
-            ScopeInterface::SCOPE_STORE,
-            $storeId
-        ) ?: '#d1d5db';
-    }
 }

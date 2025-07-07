@@ -5,12 +5,7 @@
             <general>
                 <enabled>1</enabled>
                 <show_in_production>0</show_in_production>
-                <position>top</position>
             </general>
-            <appearance>
-                <background_color>#1f2937</background_color>
-                <text_color>#d1d5db</text_color>
-            </appearance>
         </th_adminbar>
     </default>
 </config>

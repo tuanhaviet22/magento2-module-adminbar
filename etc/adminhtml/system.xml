@@ -21,24 +21,6 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Show admin bar even in production mode</comment>
                 </field>
-                <field id="position" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Position</label>
-                    <source_model>TH\Adminbar\Model\Config\Source\Position</source_model>
-                    <comment>Admin bar position on the page</comment>
-                </field>
-            </group>
-            <group id="appearance" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>Appearance</label>
-                <field id="background_color" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Background Color</label>
-                    <comment>Admin bar background color (hex code)</comment>
-                    <validate>color</validate>
-                </field>
-                <field id="text_color" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Text Color</label>
-                    <comment>Admin bar text color (hex code)</comment>
-                    <validate>color</validate>
-                </field>
             </group>
         </section>
     </system>
