@@ -1,0 +1,14 @@
+# Git attributes for Magento 2 extensions
+# Documentation and configuration
+/.github            export-ignore
+/docs               export-ignore
+*.md                diff=markdown
+README.md           export-ignore
+CHANGELOG.md        export-ignore
+INSTALLATION.md     export-ignore
+LICENSE             export-ignore
+
+# Development files
+phpstan.neon        export-ignore
+.gitattributes      export-ignore
+.gitignore          export-ignore 

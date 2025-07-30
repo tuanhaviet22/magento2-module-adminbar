@@ -5,6 +5,7 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main, develop ]
+  workflow_dispatch:
 
 jobs:
   test:
@@ -25,7 +26,7 @@ jobs:
       with:
         php-version: ${{ matrix.php-version }}
         extensions: bcmath, ctype, curl, dom, gd, hash, iconv, intl, mbstring, openssl, pdo_mysql, simplexml, soap, xsl, zip
-        tools: composer:v2
+        tools: composer:v2, cs2pr
     
     - name: Validate composer.json
       run: composer validate --strict
@@ -45,17 +46,28 @@ jobs:
     - name: Run PHP CodeSniffer
       run: |
         if [ -f "vendor/bin/phpcs" ]; then
-          vendor/bin/phpcs --standard=Magento2 --ignore=vendor/ .
+          vendor/bin/phpcs --standard=Magento2 --ignore=vendor/,.*/ --extensions=php,phtml . --report=checkstyle | cs2pr
         else
-          echo "PHP CodeSniffer not found, skipping..."
+          composer require --dev magento/magento-coding-standard
+          vendor/bin/phpcs --standard=Magento2 --ignore=vendor/,.*/ --extensions=php,phtml . --report=checkstyle | cs2pr
+        fi
+    
+    - name: Run PHPStan
+      run: |
+        if [ -f "vendor/bin/phpstan" ]; then
+          vendor/bin/phpstan analyse --error-format=github
+        else
+          composer require --dev phpstan/phpstan
+          vendor/bin/phpstan analyse --error-format=github
         fi
     
     - name: Run PHP Mess Detector
       run: |
         if [ -f "vendor/bin/phpmd" ]; then
-          vendor/bin/phpmd . text cleancode,codesize,controversial,design,naming,unusedcode --exclude vendor/
+          vendor/bin/phpmd . github cleancode,codesize,controversial,design,naming,unusedcode --exclude vendor/,.*/ --suffixes php,phtml
         else
-          echo "PHP Mess Detector not found, skipping..."
+          composer require --dev phpmd/phpmd
+          vendor/bin/phpmd . github cleancode,codesize,controversial,design,naming,unusedcode --exclude vendor/,.*/ --suffixes php,phtml
         fi
 
   security:
@@ -79,5 +91,28 @@ jobs:
         if [ -f "vendor/bin/security-checker" ]; then
           vendor/bin/security-checker security:check composer.lock
         else
-          echo "Security checker not found, skipping..."
+          composer require --dev enlightn/security-checker
+          vendor/bin/security-checker security:check composer.lock
         fi
+  
+  release:
+    needs: [test, security]
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    name: Create Release
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          Changes in this Release
+          - See CHANGELOG.md for details
+        draft: false
+        prerelease: false

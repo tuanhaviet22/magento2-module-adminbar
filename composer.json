@@ -15,8 +15,10 @@
     "keywords": [
         "magento2",
         "admin-bar",
+        "wordpress-style",
         "admin-tools",
-        "magento-extension"
+        "magento-extension",
+        "magento2-module"
     ],
     "homepage": "https://github.com/tuanhaviet22/magento2-module-adminbar",
     "support": {
@@ -25,7 +27,14 @@
     },
     "require": {
         "php": "~7.4.0||~8.1.0||~8.2.0||~8.3.0",
-        "magento/framework": "103.0.*"
+        "magento/framework": "^103.0",
+        "magento/module-backend": "*",
+        "magento/module-store": "*"
+    },
+    "require-dev": {
+        "magento/magento-coding-standard": "*",
+        "phpstan/phpstan": "^1.8",
+        "phpmd/phpmd": "^2.13"
     },
     "autoload": {
         "files": [

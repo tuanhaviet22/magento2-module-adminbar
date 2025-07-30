@@ -1,152 +1,178 @@
 # TH Admin Bar for Magento 2
 
-A WordPress-style admin bar for Magento 2, inspired by the WordPress admin bar functionality.
+[![Latest Stable Version](http://poser.pugx.org/th/module-adminbar/v)](https://packagist.org/packages/th/module-adminbar)
+[![Total Downloads](http://poser.pugx.org/th/module-adminbar/downloads)](https://packagist.org/packages/th/module-adminbar)
+[![License](http://poser.pugx.org/th/module-adminbar/license)](https://packagist.org/packages/th/module-adminbar)
+[![CI](https://github.com/tuanhaviet22/magento2-module-adminbar/actions/workflows/ci.yml/badge.svg)](https://github.com/tuanhaviet22/magento2-module-adminbar/actions/workflows/ci.yml)
 
-## 🚀 Features
+Một thanh công cụ dạng WordPress cho Magento 2, giúp truy cập nhanh vào các chức năng quản trị khi đang xem frontend.
 
-- **WordPress-style Interface**: Familiar admin bar experience for WordPress developers
-- **Context-aware Actions**: 
-  - Edit Product (when on product page)
-  - Edit CMS Page (when on CMS page)
-  - Cache Management
-  - Quick Admin Dashboard access
-- **Multi-theme Support**:
-  - Luma Theme (built-in)
-  - Hyva Theme (via TH_AdminbarHyva compatibility module)
-- **Configurable**: Admin settings for appearance and behavior
-- **Performance Optimized**: Minimal impact on frontend performance
-- **Security**: Only shows for logged-in admin users
+## Tính năng chính
 
-## 📦 Installation
+- **Giao diện giống WordPress**: Cung cấp trải nghiệm quen thuộc cho các lập trình viên WordPress
+- **Chức năng theo ngữ cảnh**: 
+  - Chỉnh sửa sản phẩm (khi đang ở trang sản phẩm)
+  - Chỉnh sửa trang CMS (khi đang ở trang CMS)
+  - Quản lý bộ nhớ đệm
+  - Truy cập nhanh vào bảng điều khiển quản trị
+- **Hỗ trợ nhiều theme**:
+  - Theme Luma (tích hợp sẵn)
+  - Theme Hyva (qua module tương thích TH_AdminbarHyva)
+- **Dễ dàng cấu hình**: Cài đặt từ Admin cho giao diện và hành vi
+- **Tối ưu hiệu suất**: Ảnh hưởng tối thiểu đến hiệu suất frontend
+- **Bảo mật**: Chỉ hiển thị cho người dùng admin đã đăng nhập
 
-### Manual Installation
+## Yêu cầu
 
-1. Copy the module to your Magento installation:
+- PHP 7.4, 8.1, 8.2 hoặc 8.3
+- Magento 2.4.x
+- Quyền quản trị viên để cấu hình module
+
+## Cài đặt
+
+### Cài đặt qua Composer (Khuyến nghị)
+
 ```bash
-cp -r TH/Adminbar app/code/TH/Adminbar
+composer require th/module-adminbar
+bin/magento module:enable TH_Adminbar
+bin/magento setup:upgrade
+bin/magento setup:di:compile
+bin/magento setup:static-content:deploy
+bin/magento cache:clean
 ```
 
-2. Enable the module:
+### Cài đặt thủ công
+
+1. Tải module và giải nén vào thư mục:
+```bash
+app/code/TH/Adminbar
+```
+
+2. Kích hoạt module:
 ```bash
 bin/magento module:enable TH_Adminbar
 bin/magento setup:upgrade
+bin/magento setup:di:compile
+bin/magento setup:static-content:deploy
 bin/magento cache:clean
 ```
 
-### For Hyva Theme Users
+### Cho người dùng Hyva Theme
 
-Additionally install the Hyva compatibility module:
+Cài đặt thêm module tương thích:
 
 ```bash
-cp -r TH/AdminbarHyva app/code/TH/AdminbarHyva
+composer require th/module-adminbar-hyva
 bin/magento module:enable TH_AdminbarHyva
 bin/magento setup:upgrade
+bin/magento setup:di:compile
+bin/magento setup:static-content:deploy
 bin/magento cache:clean
 ```
 
-## ⚙️ Configuration
+## Cấu hình
 
-Navigate to **Stores > Configuration > TH Extensions > Admin Bar** to configure:
+Điều hướng đến **Cửa hàng > Cấu hình > TH Extensions > Admin Bar** để cấu hình:
 
-- **Enable/Disable** the admin bar
-- **Show in Production Mode** setting
-- **Position** (top or bottom)
-- **Appearance** (background and text colors)
+- **Bật/Tắt** thanh công cụ admin
+- **Hiển thị ở chế độ Production**
+- **Vị trí** (đầu hoặc cuối trang)
+- **Giao diện** (màu nền và màu chữ)
 
-## 🎯 How It Works
+## Cách hoạt động
 
-1. **Authentication Check**: Verifies admin session via AJAX
-2. **Context Detection**: Automatically detects current page type (product, CMS, etc.)
-3. **Dynamic Rendering**: Shows relevant edit links based on context
-4. **Theme Compatibility**: Uses appropriate template based on active theme
+1. **Kiểm tra xác thực**: Xác minh phiên admin thông qua AJAX
+2. **Nhận diện ngữ cảnh**: Tự động phát hiện loại trang hiện tại (sản phẩm, CMS, v.v.)
+3. **Hiển thị động**: Hiển thị các liên kết chỉnh sửa phù hợp theo ngữ cảnh
+4. **Tương thích theme**: Sử dụng template phù hợp dựa trên theme đang hoạt động
 
-## 🔧 Technical Details
+## Chi tiết kỹ thuật
 
-### Main Module (TH_Adminbar)
-- **Backend Logic**: All business logic and configuration
-- **Luma Compatibility**: Default templates work with Luma theme
-- **AJAX Endpoints**: Authentication status checking
-- **Admin Configuration**: System configuration options
+### Module chính (TH_Adminbar)
+- **Logic backend**: Toàn bộ logic nghiệp vụ và cấu hình
+- **Tương thích Luma**: Các template mặc định hoạt động với theme Luma
+- **Điểm cuối AJAX**: Kiểm tra trạng thái xác thực
+- **Cấu hình Admin**: Tùy chọn cấu hình hệ thống
 
-### Hyva Compatibility Module (TH_AdminbarHyva)
-- **Alpine.js Integration**: Reactive components
-- **Tailwind CSS**: Modern styling
-- **Template Overrides**: Hyva-specific templates
-- **CSS Merging**: Automatic Tailwind configuration merging
+### Module tương thích Hyva (TH_AdminbarHyva)
+- **Tích hợp Alpine.js**: Các thành phần phản ứng
+- **Tailwind CSS**: Kiểu dáng hiện đại
+- **Ghi đè Template**: Các template dành riêng cho Hyva
+- **CSS Merging**: Tự động hợp nhất cấu hình Tailwind
 
-## 🎨 Customization
+## Tùy biến
 
-### Template Customization
+### Tùy chỉnh Template
 
-For Luma theme:
+Cho theme Luma:
 ```
 app/design/frontend/[Vendor]/[Theme]/TH_Adminbar/templates/adminbar.phtml
 ```
 
-For Hyva theme:
+Cho theme Hyva:
 ```
 app/design/frontend/[Vendor]/[Theme]/TH_AdminbarHyva/templates/hyva/adminbar.phtml
 ```
 
-### Styling Customization
+### Tùy chỉnh Giao diện
 
-The admin bar uses inline styles by default but can be customized via:
-- Admin configuration (colors)
-- CSS overrides in your theme
-- Tailwind utilities (Hyva theme)
+Thanh admin mặc định sử dụng inline styles nhưng có thể tùy chỉnh thông qua:
+- Cấu hình admin (màu sắc)
+- Ghi đè CSS trong theme của bạn
+- Các tiện ích Tailwind (theme Hyva)
 
-## 🔒 Security
+## Bảo mật
 
-- Only displays for authenticated admin users
-- Respects Magento's admin session management
-- Can be disabled in production mode
-- Uses Magento's built-in CSRF protection
+- Chỉ hiển thị cho người dùng admin đã xác thực
+- Tuân theo quản lý phiên admin của Magento
+- Có thể tắt ở chế độ production
+- Sử dụng bảo vệ CSRF tích hợp của Magento
 
-## 📱 Responsive Design
+## Thiết kế Responsive
 
-- Mobile-friendly responsive design
-- Collapsible on smaller screens
-- Touch-friendly interface
+- Thiết kế thân thiện với thiết bị di động
+- Thu gọn trên màn hình nhỏ
+- Giao diện thân thiện với cảm ứng
 
-## 🚀 Performance
+## Hiệu suất
 
-- **Minimal HTTP Requests**: Single AJAX call for status
-- **Lazy Loading**: Only loads when admin is authenticated
-- **Cached Templates**: Leverages Magento's template caching
-- **Optimized Assets**: Minimal CSS and JavaScript footprint
+- **Yêu cầu HTTP tối thiểu**: Một cuộc gọi AJAX duy nhất để kiểm tra trạng thái
+- **Tải lười biếng**: Chỉ tải khi người dùng admin được xác thực
+- **Template được cache**: Tận dụng các lớp cache của Magento
+- **Tối ưu hóa tài nguyên**: Dấu ấn CSS và JavaScript tối thiểu
 
-## 🔄 Compatibility
+## Tương thích
 
-- **Magento Versions**: 2.4.x
-- **PHP Versions**: 7.4, 8.1, 8.2, 8.3
-- **Themes**: Luma, Hyva (with compatibility module)
-- **Caching**: Compatible with all Magento caching layers
+- **Phiên bản Magento**: 2.4.x
+- **Phiên bản PHP**: 7.4, 8.1, 8.2, 8.3
+- **Theme**: Luma, Hyva (với module tương thích)
+- **Bộ nhớ đệm**: Tương thích với tất cả các lớp bộ nhớ đệm của Magento
 
-## 🐛 Troubleshooting
+## Xử lý sự cố
 
-### Admin Bar Not Showing
-1. Check if module is enabled: `bin/magento module:status TH_Adminbar`
-2. Verify admin is logged in
-3. Check configuration: Stores > Configuration > TH Extensions > Admin Bar
-4. Clear cache: `bin/magento cache:clean`
+### Thanh Admin không hiển thị
+1. Kiểm tra module đã được bật: `bin/magento module:status TH_Adminbar`
+2. Xác minh admin đã đăng nhập
+3. Kiểm tra cấu hình: Cửa hàng > Cấu hình > TH Extensions > Admin Bar
+4. Xóa cache: `bin/magento cache:clean`
 
-### Hyva Theme Issues
-1. Ensure TH_AdminbarHyva module is installed and enabled
-2. Check Alpine.js is loaded on the page
-3. Verify Tailwind CSS compilation includes admin bar styles
+### Vấn đề với Theme Hyva
+1. Đảm bảo module TH_AdminbarHyva đã được cài đặt và kích hoạt
+2. Kiểm tra Alpine.js đã được tải trên trang
+3. Xác minh biên dịch Tailwind CSS đã bao gồm các style của admin bar
 
-## 📄 License
+## Giấy phép
 
 Open Software License (OSL 3.0)
 
-## 🤝 Contributing
+## Đóng góp
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
+1. Fork repository
+2. Tạo nhánh tính năng
+3. Thực hiện các thay đổi
+4. Kiểm tra kỹ lưỡng
+5. Gửi pull request
 
-## 📞 Support
+## Hỗ trợ
 
-For support and questions, please create an issue in the repository or contact the development team.
+Để được hỗ trợ và giải đáp thắc mắc, vui lòng tạo issue trong repository hoặc liên hệ với nhóm phát triển.

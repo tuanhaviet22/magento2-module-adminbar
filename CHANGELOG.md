@@ -1,91 +1,91 @@
 # Changelog - TH Admin Bar
 
-All notable changes to this project will be documented in this file.
+Tất cả những thay đổi quan trọng của dự án này sẽ được ghi lại trong tập tin này.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+Định dạng dựa trên [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+và dự án này tuân theo [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.0] - 2025-07-05
+## [1.0.0] - 2023-07-10
 
-### Added
-- Initial release of TH Admin Bar module
-- WordPress-style admin bar for Magento 2
-- Context-aware functionality:
-  - Edit Product links on product pages
-  - Edit CMS Page links on CMS pages
-  - Cache management tools
-  - Quick admin dashboard access
-- Admin configuration panel:
-  - Enable/disable admin bar
-  - Show in production mode setting
-  - Position configuration (top/bottom)
-  - Appearance customization (colors)
-- Security features:
-  - Admin session verification via AJAX
-  - CSRF protection
-  - Production mode controls
-- Multi-theme support:
-  - Default Luma theme compatibility
-  - Extensible architecture for theme compatibility modules
-- Performance optimizations:
-  - Minimal HTTP requests
-  - Lazy loading for authenticated users
-  - Cached templates
-  - Optimized assets
-- Responsive design:
-  - Mobile-friendly interface
-  - Touch-friendly controls
-  - Collapsible on smaller screens
-- Admin functionality:
-  - Admin login/logout observers
-  - Admin activity tracking
-  - Cookie-based authentication status
-  - Dynamic admin URL construction
+### Thêm vào
+- Phát hành ban đầu của module TH Admin Bar
+- Thanh công cụ dạng WordPress cho Magento 2
+- Chức năng theo ngữ cảnh:
+  - Liên kết chỉnh sửa sản phẩm trên trang sản phẩm
+  - Liên kết chỉnh sửa trang CMS trên trang CMS
+  - Công cụ quản lý bộ nhớ đệm
+  - Truy cập nhanh vào bảng điều khiển quản trị
+- Bảng cấu hình quản trị:
+  - Bật/tắt thanh quản trị
+  - Cài đặt hiển thị trong chế độ sản xuất
+  - Cấu hình vị trí (trên/dưới)
+  - Tùy chỉnh giao diện (màu sắc)
+- Tính năng bảo mật:
+  - Xác minh phiên quản trị qua AJAX
+  - Bảo vệ CSRF
+  - Kiểm soát chế độ sản xuất
+- Hỗ trợ nhiều theme:
+  - Tương thích với theme mặc định Luma
+  - Kiến trúc mở rộng cho các module tương thích theme
+- Tối ưu hóa hiệu suất:
+  - Yêu cầu HTTP tối thiểu
+  - Tải lười biếng cho người dùng đã xác thực
+  - Template được lưu trong bộ nhớ đệm
+  - Tối ưu hóa tài nguyên
+- Thiết kế responsive:
+  - Giao diện thân thiện với thiết bị di động
+  - Điều khiển thân thiện với cảm ứng
+  - Thu gọn trên màn hình nhỏ hơn
+- Chức năng quản trị:
+  - Observer đăng nhập/đăng xuất quản trị
+  - Theo dõi hoạt động quản trị
+  - Trạng thái xác thực dựa trên cookie
+  - Xây dựng URL quản trị động
 
-### Technical Features
-- PHP 7.4, 8.1, 8.2, 8.3 compatibility
-- Magento 2.4.x compatibility
-- PSR-4 autoloading
-- Composer package structure
-- Comprehensive documentation
-- Installation guides
-- Troubleshooting documentation
+### Tính năng kỹ thuật
+- Tương thích PHP 7.4, 8.1, 8.2, 8.3
+- Tương thích Magento 2.4.x
+- Tự động tải PSR-4
+- Cấu trúc gói Composer
+- Tài liệu đầy đủ
+- Hướng dẫn cài đặt
+- Tài liệu xử lý sự cố
 
-### Security
-- Only displays for authenticated admin users
-- Respects Magento's admin session management
-- Can be disabled in production mode
-- Uses Magento's built-in CSRF protection
-- Secure AJAX endpoints for status checking
+### Bảo mật
+- Chỉ hiển thị cho người dùng quản trị đã xác thực
+- Tôn trọng quản lý phiên quản trị của Magento
+- Có thể bị vô hiệu hóa trong chế độ sản xuất
+- Sử dụng bảo vệ CSRF tích hợp của Magento
+- Điểm cuối AJAX an toàn để kiểm tra trạng thái
 
-### Performance
-- Minimal impact on frontend performance
-- Single AJAX call for authentication status
-- Leverages Magento's caching layers
-- Optimized asset loading
-- Lazy initialization
+### Hiệu suất
+- Tác động tối thiểu đến hiệu suất frontend
+- Một cuộc gọi AJAX duy nhất cho trạng thái xác thực
+- Tận dụng các lớp bộ nhớ đệm của Magento
+- Tải tài nguyên tối ưu
+- Khởi tạo lười biếng
 
-## [Unreleased]
+## [Chưa phát hành]
 
-### Planned Features
-- Additional context-aware actions
-- More customization options
-- Enhanced mobile experience
-- Integration with more Magento admin features
-- Performance improvements
-- Additional theme compatibility modules
+### Tính năng dự kiến
+- Thêm hành động theo ngữ cảnh
+- Thêm tùy chọn tùy chỉnh
+- Cải thiện trải nghiệm trên thiết bị di động
+- Tích hợp với nhiều tính năng quản trị Magento hơn
+- Cải thiện hiệu suất
+- Bổ sung module tương thích theme
 
 ---
 
-## Version History
+## Lịch sử phiên bản
 
-- **1.0.0** - Initial stable release with core functionality
-- **Future versions** - Will follow semantic versioning
+- **1.0.0** - Phát hành ổn định ban đầu với chức năng cốt lõi
+- **Phiên bản tương lai** - Sẽ tuân theo semantic versioning
 
-## Support
+## Hỗ trợ
 
-For version-specific issues or questions about changes, please:
-1. Check the relevant version documentation
-2. Review the installation guide for your version
-3. Create an issue on GitHub with version information
-4. Include detailed environment and version details
+Đối với các vấn đề hoặc câu hỏi cụ thể về phiên bản, vui lòng:
+1. Kiểm tra tài liệu phiên bản liên quan
+2. Xem hướng dẫn cài đặt cho phiên bản của bạn
+3. Tạo issue trên GitHub với thông tin phiên bản
+4. Bao gồm chi tiết môi trường và phiên bản
