@@ -221,6 +221,69 @@ class Adminbar extends Template
     }
 
     /**
+     * Get current order if on order view page
+     *
+     * @return \Magento\Sales\Model\Order|null
+     */
+    public function getCurrentOrder(): ?\Magento\Sales\Model\Order
+    {
+        return $this->registry->registry('current_order');
+    }
+
+    /**
+     * Get current invoice if on invoice view page
+     *
+     * @return \Magento\Sales\Model\Order\Invoice|null
+     */
+    public function getCurrentInvoice(): ?\Magento\Sales\Model\Order\Invoice
+    {
+        return $this->registry->registry('current_invoice');
+    }
+
+    /**
+     * Get current shipment if on shipment view page
+     *
+     * @return \Magento\Sales\Model\Order\Shipment|null
+     */
+    public function getCurrentShipment(): ?\Magento\Sales\Model\Order\Shipment
+    {
+        return $this->registry->registry('current_shipment');
+    }
+
+    /**
+     * Get admin URL for viewing current order
+     *
+     * @param int $orderId
+     * @return string
+     */
+    public function getOrderViewUrl(int $orderId): string
+    {
+        return $this->getAdminUrl('sales/order/view', ['order_id' => $orderId]);
+    }
+
+    /**
+     * Get admin URL for viewing current invoice
+     *
+     * @param int $invoiceId
+     * @return string
+     */
+    public function getInvoiceViewUrl(int $invoiceId): string
+    {
+        return $this->getAdminUrl('sales/invoice/view', ['invoice_id' => $invoiceId]);
+    }
+
+    /**
+     * Get admin URL for viewing current shipment
+     *
+     * @param int $shipmentId
+     * @return string
+     */
+    public function getShipmentViewUrl(int $shipmentId): string
+    {
+        return $this->getAdminUrl('sales/shipment/view', ['shipment_id' => $shipmentId]);
+    }
+
+    /**
      * Get admin URL for editing current product
      *
      * @param int $productId
@@ -251,6 +314,97 @@ class Adminbar extends Template
     public function getCmsPageEditUrl(int $pageId): string
     {
         return $this->getAdminUrl('cms/page/edit', ['page_id' => $pageId]);
+    }
+
+    /**
+     * Get admin URL for editing current customer
+     *
+     * @param int $customerId
+     * @return string
+     */
+    public function getCustomerEditUrl($customerId)
+    {
+        return $this->getAdminUrl('customer/index/edit', ['id' => $customerId]);
+    }
+
+    /**
+     * Get orders listing URL in admin
+     *
+     * @return string
+     */
+    public function getOrdersUrl()
+    {
+        return $this->getAdminUrl('sales/order');
+    }
+
+    /**
+     * Get invoices listing URL in admin
+     *
+     * @return string
+     */
+    public function getInvoicesUrl()
+    {
+        return $this->getAdminUrl('sales/invoice');
+    }
+
+    /**
+     * Get shipments listing URL in admin
+     *
+     * @return string
+     */
+    public function getShipmentsUrl()
+    {
+        return $this->getAdminUrl('sales/shipment');
+    }
+
+    /**
+     * Get credit memos listing URL in admin
+     *
+     * @return string
+     */
+    public function getCreditmemosUrl()
+    {
+        return $this->getAdminUrl('sales/creditmemo');
+    }
+
+    /**
+     * Get products listing URL in admin
+     *
+     * @return string
+     */
+    public function getProductsUrl()
+    {
+        return $this->getAdminUrl('catalog/product');
+    }
+
+    /**
+     * Get categories listing URL in admin
+     *
+     * @return string
+     */
+    public function getCategoriesUrl()
+    {
+        return $this->getAdminUrl('catalog/category');
+    }
+
+    /**
+     * Get customers listing URL in admin
+     *
+     * @return string
+     */
+    public function getCustomersUrl()
+    {
+        return $this->getAdminUrl('customer/index');
+    }
+
+    /**
+     * Get system configuration URL in admin
+     *
+     * @return string
+     */
+    public function getConfigUrl()
+    {
+        return $this->getAdminUrl('admin/system_config');
     }
 
     /**
@@ -311,7 +465,6 @@ class Adminbar extends Template
                 $queryString = '?' . http_build_query($params);
             }
 
-            // Construct full admin URL: https://app.bebe9.test/admin_1i2pgp/admin/dashboard/
             return rtrim($baseUrl, '/') . '/' . $adminFrontName . '/' . $routePath . '/' . $queryString;
 
         } catch (\Exception $e) {
@@ -343,6 +496,29 @@ class Adminbar extends Template
     public function getAdminSession(): AdminSession
     {
         return $this->adminSession;
+    }
+
+    /**
+     * Get current customer if logged in
+     *
+     * @return \Magento\Customer\Model\Customer|null
+     */
+    public function getCurrentCustomer()
+    {
+        if ($this->customerSession->isLoggedIn()) {
+            return $this->customerSession->getCustomer();
+        }
+        return null;
+    }
+
+    /**
+     * Check if customer is logged in
+     *
+     * @return bool
+     */
+    public function isCustomerLoggedIn()
+    {
+        return $this->customerSession->isLoggedIn();
     }
 
     /**
