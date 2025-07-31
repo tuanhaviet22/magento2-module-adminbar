@@ -1,13 +1,20 @@
 <?php
+/*
+ *  @author    TuanHa
+ *  @copyright Copyright (c) 2025 Tuan Ha <https://www.tuanha.dev/>
+ *
+ */
+
 declare(strict_types=1);
 
 namespace TH\Adminbar\Controller\Auth;
 
+use Exception;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\ActionInterface;
+use Magento\Framework\App\DeploymentConfig;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\HTTP\Client\Curl;
-use Magento\Framework\App\DeploymentConfig;
 use Magento\Framework\UrlInterface;
 use TH\Adminbar\Helper\Data as AdminbarHelper;
 
@@ -71,7 +78,7 @@ class Refresh implements ActionInterface, HttpPostActionInterface
     public function execute()
     {
         $resultJson = $this->resultJsonFactory->create();
-        
+
         try {
             // Get admin frontName from deployment config
             $adminFrontName = $this->getAdminFrontName();
@@ -85,31 +92,31 @@ class Refresh implements ActionInterface, HttpPostActionInterface
             // Build admin refresh URL
             $baseUrl = $this->urlBuilder->getBaseUrl();
             $adminUrl = rtrim($baseUrl, '/') . '/' . $adminFrontName . '/thadminbar/auth/refresh/';
-            
+
             // Make internal request to admin endpoint with current cookies
             $this->curl->setOption(CURLOPT_RETURNTRANSFER, true);
             $this->curl->setOption(CURLOPT_TIMEOUT, 5);
             $this->curl->setOption(CURLOPT_FOLLOWLOCATION, true);
             $this->curl->setOption(CURLOPT_SSL_VERIFYPEER, false);
             $this->curl->setOption(CURLOPT_COOKIE, $this->getCurrentCookies());
-            
+
             $this->curl->post($adminUrl, []);
             $response = $this->curl->getBody();
             $httpCode = $this->curl->getStatus();
-            
+
             if ($httpCode === 200 && $response) {
                 $adminResponse = json_decode($response, true);
                 if ($adminResponse && isset($adminResponse['success'])) {
                     return $resultJson->setData($adminResponse);
                 }
             }
-            
+
             return $resultJson->setData([
                 'success' => false,
                 'message' => 'Failed to refresh admin session'
             ]);
-            
-        } catch (\Exception $e) {
+
+        } catch (Exception $e) {
             return $resultJson->setData([
                 'success' => false,
                 'message' => 'Refresh failed: ' . $e->getMessage()
@@ -127,7 +134,7 @@ class Refresh implements ActionInterface, HttpPostActionInterface
         try {
             $backendConfig = $this->deploymentConfig->get('backend');
             return $backendConfig['frontName'] ?? null;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return null;
         }
     }

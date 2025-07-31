@@ -1,16 +1,24 @@
 <?php
+/*
+ *  @author    TuanHa
+ *  @copyright Copyright (c) 2025 Tuan Ha <https://www.tuanha.dev/>
+ *
+ */
+
 declare(strict_types=1);
 
 namespace TH\Adminbar\Observer;
 
+use Exception;
+use Magento\Backend\Model\Auth\Session as AdminSession;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Session\SessionManagerInterface;
-use Magento\Backend\Model\Auth\Session as AdminSession;
-use Magento\Framework\Stdlib\CookieManagerInterface;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
 use Magento\Framework\Stdlib\Cookie\PublicCookieMetadata;
-use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Stdlib\CookieManagerInterface;
+use Magento\Store\Model\ScopeInterface;
 
 /**
  * Observer to track admin login for admin bar functionality
@@ -75,9 +83,8 @@ class AdminLoginObserver implements ObserverInterface
             if ($this->adminSession->isLoggedIn() && $this->adminSession->getUser()) {
                 $this->refreshAdminCookie();
             }
-        } catch (\Exception $e) {
-            // Silently fail to avoid breaking admin login
-            // Log error if needed
+        } catch (Exception $e) {
+
         }
     }
 
@@ -94,46 +101,35 @@ class AdminLoginObserver implements ObserverInterface
             if (!$user) {
                 return;
             }
-
-            // Check if we should refresh the cookie
             if (!$this->shouldRefreshCookie()) {
                 return;
             }
-
-            // Create secure admin cookie data with fresh timestamp
             $cookieData = [
                 'logged_in' => true,
                 'user_id' => $user->getId(),
                 'username' => $user->getUsername(),
-                'timestamp' => time(), // Fresh timestamp extends the cookie
+                'timestamp' => time(),
                 'last_activity' => time(),
-                // Add a hash for security
                 'hash' => hash('sha256', $user->getId() . $user->getUsername() . time())
             ];
-
-            // Encode cookie data
             $cookieValue = base64_encode(json_encode($cookieData));
-
-            // Set cookie metadata with admin session lifetime
             $publicCookieMetadata = $this->cookieMetadataFactory->createPublicCookieMetadata();
             $publicCookieMetadata->setDuration($this->getAdminSessionLifetime());
             $publicCookieMetadata->setPath('/');
-            $publicCookieMetadata->setHttpOnly(false); // Allow JavaScript access
-            $publicCookieMetadata->setSecure(false); // Set to true in production with HTTPS
+            $publicCookieMetadata->setHttpOnly(false);
+            $publicCookieMetadata->setSecure(false);
             $publicCookieMetadata->setSameSite('Lax');
 
-            // Set the admin cookie with fresh expiration
             $this->cookieManager->setPublicCookie(
                 'th_admin_bar_auth',
                 $cookieValue,
                 $publicCookieMetadata
             );
 
-            // Also store in session as backup
             $this->sessionManager->setData('th_admin_bar_auth', $cookieData);
 
-        } catch (\Exception $e) {
-            // Silently fail
+        } catch (Exception $e) {
+
         }
     }
 
@@ -146,32 +142,24 @@ class AdminLoginObserver implements ObserverInterface
     private function shouldRefreshCookie(): bool
     {
         try {
-            // Get current cookie
+
             $cookieValue = $this->cookieManager->getCookie('th_admin_bar_auth');
             if (!$cookieValue) {
-                return true; // No cookie exists, create one
+                return true;
             }
-
-            // Decode existing cookie
             $decodedData = base64_decode($cookieValue);
             if (!$decodedData) {
-                return true; // Invalid cookie, refresh it
+                return true;
             }
-
             $cookieData = json_decode($decodedData, true);
             if (!is_array($cookieData) || !isset($cookieData['timestamp'])) {
-                return true; // Invalid data, refresh it
+                return true;
             }
-
-            // Only refresh if cookie is older than refresh threshold
-            // Refresh every 5 minutes (300 seconds) to avoid too frequent updates
             $refreshThreshold = 300;
             $timeSinceLastUpdate = time() - $cookieData['timestamp'];
-
             return $timeSinceLastUpdate >= $refreshThreshold;
-
-        } catch (\Exception $e) {
-            return true; // On error, refresh the cookie
+        } catch (Exception $e) {
+            return true;
         }
     }
 
@@ -183,18 +171,12 @@ class AdminLoginObserver implements ObserverInterface
     private function getAdminSessionLifetime(): int
     {
         try {
-            // Get admin session lifetime from configuration
-            // Path: admin/security/session_lifetime
             $sessionLifetime = $this->scopeConfig->getValue(
                 'admin/security/session_lifetime',
-                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                ScopeInterface::SCOPE_STORE
             );
-
-            // Default to 7200 seconds (2 hours) if not configured
             return (int)$sessionLifetime ?: 7200;
-
-        } catch (\Exception $e) {
-            // Default fallback: 2 hours
+        } catch (Exception $e) {
             return 7200;
         }
     }

@@ -1,13 +1,20 @@
 <?php
+/*
+ *  @author    TuanHa
+ *  @copyright Copyright (c) 2025 Tuan Ha <https://www.tuanha.dev/>
+ *
+ */
+
 declare(strict_types=1);
 
 namespace TH\Adminbar\Helper;
 
+use Exception;
+use Magento\Backend\Model\Auth\Session as AdminSession;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
-use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\App\State;
-use Magento\Backend\Model\Auth\Session as AdminSession;
+use Magento\Store\Model\ScopeInterface;
 
 /**
  * Admin Bar Helper
@@ -70,7 +77,6 @@ class Data extends AbstractHelper
             return false;
         }
 
-        // Check production mode setting
         try {
             $mode = $this->appState->getMode();
             if ($mode === State::MODE_PRODUCTION) {
@@ -79,11 +85,10 @@ class Data extends AbstractHelper
                     ScopeInterface::SCOPE_STORE,
                     $storeId
                 );
-            }else{
+            } else {
                 return true;
             }
-        } catch (\Exception $e) {
-            // If we can't determine mode, allow showing (will be checked via AJAX)
+        } catch (Exception $e) {
             return true;
         }
 
@@ -103,12 +108,10 @@ class Data extends AbstractHelper
             return false;
         }
 
-        // Check if admin is logged in (only works in admin context)
         if (!$this->adminSession->isLoggedIn()) {
             return false;
         }
 
-        // Check production mode setting
         try {
             $mode = $this->appState->getMode();
             if ($mode === State::MODE_PRODUCTION) {
@@ -118,13 +121,10 @@ class Data extends AbstractHelper
                     $storeId
                 );
             }
-        } catch (\Exception $e) {
-            // If we can't determine mode, show the bar
+        } catch (Exception $e) {
             return true;
         }
 
         return true;
     }
-
-
 }

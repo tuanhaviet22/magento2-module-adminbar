@@ -74,17 +74,20 @@ bin/magento cache:clean
 ## 🐛 Troubleshooting
 
 ### Module Not Showing
+
 - Check if module is enabled: `bin/magento module:status TH_Adminbar`
 - Verify you're logged into admin
 - Check module configuration
 - Clear all caches
 
 ### Permission Issues
+
 - Ensure proper file permissions
 - Check Magento file ownership
 - Verify web server has read access
 
 ### Cache Issues
+
 - Clear all caches: `bin/magento cache:clean`
 - Flush cache storage: `bin/magento cache:flush`
 - Clear generated files: `rm -rf generated/*`
@@ -92,6 +95,7 @@ bin/magento cache:clean
 ## 📞 Support
 
 For installation issues, please:
+
 1. Check this guide first
 2. Review the main README.md
 3. Create an issue on GitHub

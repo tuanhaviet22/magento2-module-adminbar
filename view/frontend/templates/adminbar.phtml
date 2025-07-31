@@ -1,10 +1,15 @@
 <?php
+/*
+ *  @author    TuanHa
+ *  @copyright Copyright (c) 2025 Tuan Ha <https://www.tuanha.dev/>
+ *
+ */
+
 /**
  * @var \TH\Adminbar\Block\Adminbar $block
  * @var \Magento\Framework\Escaper $escaper
  */
 
-// Don't render if admin bar shouldn't be displayed
 if (!$block->shouldDisplay()) {
     return;
 }
@@ -16,472 +21,529 @@ $currentCmsPage = $block->getCurrentCmsPage();
 $currentOrder = $block->getCurrentOrder();
 $currentInvoice = $block->getCurrentInvoice();
 $currentShipment = $block->getCurrentShipment();
-
-// Debug information (remove in production)
 $debugInfo = $block->getDebugInfo();
-
-// URLs
 $adminDashboardUrl = $block->getAdminDashboardUrl();
 $cacheManagementUrl = $block->getCacheManagementUrl();
 $indexerManagementUrl = $block->getIndexerManagementUrl();
 $statusUrl = $block->getUrl('thadminbar/auth/status');
-
-// Fixed configuration - always top position with default styling
 ?>
-
 <div id="th-adminbar-wrapper">
-    <!-- Main Admin Bar -->
     <div id="th-adminbar" style="display: none;">
-        <div class="th-adminbar-container top-0"
-         style="position: fixed; top: 0; left: 0; right: 0; z-index: 9999; height: 32px;
+        <div class="th-adminbar-container top-0" style="position: fixed; top: 0; left: 0; right: 0; z-index: 9999; height: 32px;
                 background-color: #1f2937;
                 color: #d1d5db;
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
                 font-size: 13px; line-height: 32px; box-shadow: 0 1px 3px rgba(0,0,0,0.3);">
 
-        <div style="width: 100%; padding: 0 16px; display: flex; align-items: center; height: 100%;">
-            <div style="margin-right: 16px;">
-                <a href="<?= $escaper->escapeUrl($adminDashboardUrl) ?>"
-                   style="color: inherit; text-decoration: none; padding: 0 8px; height: 32px; display: inline-flex; align-items: center; font-weight: 600;"
-                   onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
-                   onmouseout="this.style.backgroundColor='transparent'">
-                    <?= $escaper->escapeHtml(__('Magento')) ?>
-                </a>
-            </div>
-            <!-- Dropdowns Section -->
-            <div style="display: flex; align-items: center; margin-left: 16px;">
+            <div style="width: 100%; padding: 0 16px; display: flex; align-items: center; height: 100%;">
+                <div style="margin-right: 16px;">
+                    <a href="<?= $escaper->escapeUrl($adminDashboardUrl) ?>"
+                       style="color: inherit; text-decoration: none; padding: 0 8px; height: 32px; display: inline-flex; align-items: center; font-weight: 600;"
+                       onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                       onmouseout="this.style.backgroundColor='transparent'">
+                        <?= $escaper->escapeHtml(__('Magento')) ?>
+                    </a>
+                </div>
+                <div style="display: flex; align-items: center; margin-left: 16px;">
+                    <div class="th-dropdown" style="position: relative; margin-right: 4px;">
+                        <button onclick="toggleDropdown('quicklinks-dropdown')"
+                                style="color: inherit; text-decoration: none; padding: 0 12px; height: 32px; display: inline-flex; align-items: center; background: none; border: none; cursor: pointer;"
+                                onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                                onmouseout="this.style.backgroundColor='transparent'">
+                            ⚡ <?= $escaper->escapeHtml(__('Quick Links')) ?> ▼
+                        </button>
+                        <div id="quicklinks-dropdown" class="th-dropdown-content"
+                             style="display: none; position: absolute; top: 32px; left: 0; background: #374151; border: 1px solid #4b5563; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); min-width: 200px; z-index: 10000;">
+                            <div style="padding: 4px 0;">
+                                <!-- Sales section with submenu -->
+                                <div class="th-submenu" style="position: relative;">
+                                    <a href="javascript:void(0)"
+                                       onmouseover="document.getElementById('sales-submenu').style.display='block'; this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                                       onmouseout="setTimeout(function() { if (!document.getElementById('sales-submenu').matches(':hover')) document.getElementById('sales-submenu').style.display='none'; }, 100); this.style.backgroundColor='transparent'"
+                                       style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; color: inherit; text-decoration: none; font-size: 11px;">
+                                        💰 <?= $escaper->escapeHtml(__('Sales')) ?>
+                                        <span style="margin-left: 5px;">▶</span>
+                                    </a>
+                                    <div id="sales-submenu" class="th-submenu-content"
+                                         onmouseover="this.style.display='block'" onmouseout="this.style.display='none'"
+                                         style="display: none; position: absolute; left: 100%; top: 0; background: #374151; border: 1px solid #4b5563; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); min-width: 150px;">
+                                        <a href="<?= $escaper->escapeUrl($block->getOrdersUrl()) ?>"
+                                           style="display: block; padding: 8px 12px; color: inherit; text-decoration: none; font-size: 11px;"
+                                           onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                                           onmouseout="this.style.backgroundColor='transparent'">
+                                            <?= $escaper->escapeHtml(__('Orders')) ?>
+                                        </a>
+                                        <a href="<?= $escaper->escapeUrl($block->getInvoicesUrl()) ?>"
+                                           style="display: block; padding: 8px 12px; color: inherit; text-decoration: none; font-size: 11px;"
+                                           onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                                           onmouseout="this.style.backgroundColor='transparent'">
+                                            <?= $escaper->escapeHtml(__('Invoices')) ?>
+                                        </a>
+                                        <a href="<?= $escaper->escapeUrl($block->getShipmentsUrl()) ?>"
+                                           style="display: block; padding: 8px 12px; color: inherit; text-decoration: none; font-size: 11px;"
+                                           onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                                           onmouseout="this.style.backgroundColor='transparent'">
+                                            <?= $escaper->escapeHtml(__('Shipments')) ?>
+                                        </a>
+                                        <a href="<?= $escaper->escapeUrl($block->getCreditmemosUrl()) ?>"
+                                           style="display: block; padding: 8px 12px; color: inherit; text-decoration: none; font-size: 11px;"
+                                           onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                                           onmouseout="this.style.backgroundColor='transparent'">
+                                            <?= $escaper->escapeHtml(__('Credit Memos')) ?>
+                                        </a>
+                                    </div>
+                                </div>
 
-                <!-- Quick Links Dropdown -->
-                <div class="th-dropdown" style="position: relative; margin-right: 4px;">
-                    <button onclick="toggleDropdown('quicklinks-dropdown')"
-                            style="color: inherit; text-decoration: none; padding: 0 12px; height: 32px; display: inline-flex; align-items: center; background: none; border: none; cursor: pointer;"
-                            onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
-                            onmouseout="this.style.backgroundColor='transparent'">
-                        ⚡ <?= $escaper->escapeHtml(__('Quick Links')) ?> ▼
-                    </button>
-                    <div id="quicklinks-dropdown" class="th-dropdown-content" style="display: none; position: absolute; top: 32px; left: 0; background: #374151; border: 1px solid #4b5563; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); min-width: 200px; z-index: 10000;">
-                        <div style="padding: 4px 0;">
-                            <!-- Sales section with submenu -->
-                            <div class="th-submenu" style="position: relative;">
-                                <a href="javascript:void(0)" 
-                                   onmouseover="document.getElementById('sales-submenu').style.display='block'; this.style.backgroundColor='rgba(255,255,255,0.1)'"
-                                   onmouseout="setTimeout(function() { if (!document.getElementById('sales-submenu').matches(':hover')) document.getElementById('sales-submenu').style.display='none'; }, 100); this.style.backgroundColor='transparent'"
-                                   style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; color: inherit; text-decoration: none; font-size: 11px;">
-                                    💰 <?= $escaper->escapeHtml(__('Sales')) ?>
-                                    <span style="margin-left: 5px;">▶</span>
+                                <!-- Catalog section with submenu -->
+                                <div class="th-submenu" style="position: relative;">
+                                    <a href="javascript:void(0)"
+                                       onmouseover="document.getElementById('catalog-submenu').style.display='block'; this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                                       onmouseout="setTimeout(function() { if (!document.getElementById('catalog-submenu').matches(':hover')) document.getElementById('catalog-submenu').style.display='none'; }, 100); this.style.backgroundColor='transparent'"
+                                       style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; color: inherit; text-decoration: none; font-size: 11px;">
+                                        📦 <?= $escaper->escapeHtml(__('Catalog')) ?>
+                                        <span style="margin-left: 5px;">▶</span>
+                                    </a>
+                                    <div id="catalog-submenu" class="th-submenu-content"
+                                         onmouseover="this.style.display='block'" onmouseout="this.style.display='none'"
+                                         style="display: none; position: absolute; left: 100%; top: 0; background: #374151; border: 1px solid #4b5563; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); min-width: 150px;">
+                                        <a href="<?= $escaper->escapeUrl($block->getProductsUrl()) ?>"
+                                           style="display: block; padding: 8px 12px; color: inherit; text-decoration: none; font-size: 11px;"
+                                           onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                                           onmouseout="this.style.backgroundColor='transparent'">
+                                            <?= $escaper->escapeHtml(__('Products')) ?>
+                                        </a>
+                                        <a href="<?= $escaper->escapeUrl($block->getCategoriesUrl()) ?>"
+                                           style="display: block; padding: 8px 12px; color: inherit; text-decoration: none; font-size: 11px;"
+                                           onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                                           onmouseout="this.style.backgroundColor='transparent'">
+                                            <?= $escaper->escapeHtml(__('Categories')) ?>
+                                        </a>
+                                    </div>
+                                </div>
+                                <a href="<?= $escaper->escapeUrl($block->getCustomersUrl()) ?>"
+                                   style="display: flex; align-items: center; padding: 8px 12px; color: inherit; text-decoration: none; font-size: 11px;"
+                                   onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                                   onmouseout="this.style.backgroundColor='transparent'">
+                                    👤 <?= $escaper->escapeHtml(__('Customers')) ?>
                                 </a>
-                                <div id="sales-submenu" class="th-submenu-content" 
-                                     onmouseover="this.style.display='block'" 
-                                     onmouseout="this.style.display='none'"
-                                     style="display: none; position: absolute; left: 100%; top: 0; background: #374151; border: 1px solid #4b5563; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); min-width: 150px;">
-                                    <a href="<?= $escaper->escapeUrl($block->getOrdersUrl()) ?>"
-                                       style="display: block; padding: 8px 12px; color: inherit; text-decoration: none; font-size: 11px;"
-                                       onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
-                                       onmouseout="this.style.backgroundColor='transparent'">
-                                        <?= $escaper->escapeHtml(__('Orders')) ?>
-                                    </a>
-                                    <a href="<?= $escaper->escapeUrl($block->getInvoicesUrl()) ?>"
-                                       style="display: block; padding: 8px 12px; color: inherit; text-decoration: none; font-size: 11px;"
-                                       onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
-                                       onmouseout="this.style.backgroundColor='transparent'">
-                                        <?= $escaper->escapeHtml(__('Invoices')) ?>
-                                    </a>
-                                    <a href="<?= $escaper->escapeUrl($block->getShipmentsUrl()) ?>"
-                                       style="display: block; padding: 8px 12px; color: inherit; text-decoration: none; font-size: 11px;"
-                                       onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
-                                       onmouseout="this.style.backgroundColor='transparent'">
-                                        <?= $escaper->escapeHtml(__('Shipments')) ?>
-                                    </a>
-                                    <a href="<?= $escaper->escapeUrl($block->getCreditmemosUrl()) ?>"
-                                       style="display: block; padding: 8px 12px; color: inherit; text-decoration: none; font-size: 11px;"
-                                       onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
-                                       onmouseout="this.style.backgroundColor='transparent'">
-                                        <?= $escaper->escapeHtml(__('Credit Memos')) ?>
-                                    </a>
+                                <a href="<?= $escaper->escapeUrl($block->getConfigUrl()) ?>"
+                                   style="display: flex; align-items: center; padding: 8px 12px; color: inherit; text-decoration: none; font-size: 11px;"
+                                   onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                                   onmouseout="this.style.backgroundColor='transparent'">
+                                    ⚙️ <?= $escaper->escapeHtml(__('Configuration')) ?>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <?php if ($currentProduct): ?>
+                        <div class="th-dropdown" style="position: relative; margin-right: 4px;">
+                            <button onclick="toggleDropdown('product-dropdown')"
+                                    style="color: inherit; text-decoration: none; padding: 0 12px; height: 32px; display: inline-flex; align-items: center; background: none; border: none; cursor: pointer;"
+                                    onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                                    onmouseout="this.style.backgroundColor='transparent'">
+                                📦 <?= $escaper->escapeHtml(__('Product')) ?> ▼
+                            </button>
+                            <div id="product-dropdown" class="th-dropdown-content"
+                                 style="display: none; position: absolute; top: 32px; left: 0; background: #374151; border: 1px solid #4b5563; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); min-width: 280px; z-index: 10000;">
+                                <div style="padding: 12px; font-size: 11px;">
+                                    <div style="color: #93c5fd; font-weight: 600; margin-bottom: 8px;">
+                                        <?= $escaper->escapeHtml(__('Product Information')) ?>
+                                    </div>
+                                    <div style="margin-bottom: 4px;"><span
+                                                style="color: #9ca3af;"><?= $escaper->escapeHtml(__('ID:')) ?></span>
+                                        <?= $escaper->escapeHtml($currentProduct->getId()) ?></div>
+                                    <div style="margin-bottom: 4px;"><span
+                                                style="color: #9ca3af;"><?= $escaper->escapeHtml(__('SKU:')) ?></span>
+                                        <?= $escaper->escapeHtml($currentProduct->getSku()) ?></div>
+                                    <div style="margin-bottom: 4px;"><span
+                                                style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Name:')) ?></span>
+                                        <?= $escaper->escapeHtml($currentProduct->getName()) ?></div>
+                                    <?php if ($currentProduct->getTypeId()): ?>
+                                        <div style="margin-bottom: 4px;"><span
+                                                    style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Type:')) ?></span>
+                                            <?= $escaper->escapeHtml(ucfirst($currentProduct->getTypeId())) ?></div>
+                                    <?php endif; ?>
+                                    <?php if ($currentProduct->getPrice()): ?>
+                                        <div style="margin-bottom: 8px;"><span
+                                                    style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Price:')) ?></span>
+                                            <?= $escaper->escapeHtml($currentProduct->getPrice()) ?></div>
+                                    <?php endif; ?>
+                                    <div style="border-top: 1px solid #4b5563; padding-top: 8px;">
+                                        <a href="<?= $escaper->escapeUrl($block->getProductEditUrl($currentProduct->getId())) ?>"
+                                           style="color: #93c5fd; text-decoration: none; font-size: 11px;"
+                                           onmouseover="this.style.color='#bfdbfe'"
+                                           onmouseout="this.style.color='#93c5fd'">
+                                            ✏️ <?= $escaper->escapeHtml(__('Edit Product')) ?>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-
-                            <!-- Catalog section with submenu -->
-                            <div class="th-submenu" style="position: relative;">
-                                <a href="javascript:void(0)" 
-                                   onmouseover="document.getElementById('catalog-submenu').style.display='block'; this.style.backgroundColor='rgba(255,255,255,0.1)'"
-                                   onmouseout="setTimeout(function() { if (!document.getElementById('catalog-submenu').matches(':hover')) document.getElementById('catalog-submenu').style.display='none'; }, 100); this.style.backgroundColor='transparent'"
-                                   style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; color: inherit; text-decoration: none; font-size: 11px;">
-                                    📦 <?= $escaper->escapeHtml(__('Catalog')) ?>
-                                    <span style="margin-left: 5px;">▶</span>
-                                </a>
-                                <div id="catalog-submenu" class="th-submenu-content" 
-                                     onmouseover="this.style.display='block'" 
-                                     onmouseout="this.style.display='none'"
-                                     style="display: none; position: absolute; left: 100%; top: 0; background: #374151; border: 1px solid #4b5563; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); min-width: 150px;">
-                                    <a href="<?= $escaper->escapeUrl($block->getProductsUrl()) ?>"
-                                       style="display: block; padding: 8px 12px; color: inherit; text-decoration: none; font-size: 11px;"
-                                       onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
-                                       onmouseout="this.style.backgroundColor='transparent'">
-                                        <?= $escaper->escapeHtml(__('Products')) ?>
-                                    </a>
-                                    <a href="<?= $escaper->escapeUrl($block->getCategoriesUrl()) ?>"
-                                       style="display: block; padding: 8px 12px; color: inherit; text-decoration: none; font-size: 11px;"
-                                       onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
-                                       onmouseout="this.style.backgroundColor='transparent'">
-                                        <?= $escaper->escapeHtml(__('Categories')) ?>
-                                    </a>
+                        </div>
+                    <?php endif; ?>
+                    <?php if ($currentCategory): ?>
+                        <div class="th-dropdown" style="position: relative; margin-right: 4px;">
+                            <button onclick="toggleDropdown('category-dropdown')"
+                                    style="color: inherit; text-decoration: none; padding: 0 12px; height: 32px; display: inline-flex; align-items: center; background: none; border: none; cursor: pointer;"
+                                    onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                                    onmouseout="this.style.backgroundColor='transparent'">
+                                📁 <?= $escaper->escapeHtml(__('Category')) ?> ▼
+                            </button>
+                            <div id="category-dropdown" class="th-dropdown-content"
+                                 style="display: none; position: absolute; top: 32px; left: 0; background: #374151; border: 1px solid #4b5563; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); min-width: 280px; z-index: 10000;">
+                                <div style="padding: 12px; font-size: 11px;">
+                                    <div style="color: #86efac; font-weight: 600; margin-bottom: 8px;">
+                                        <?= $escaper->escapeHtml(__('Category Information')) ?>
+                                    </div>
+                                    <div style="margin-bottom: 4px;"><span
+                                                style="color: #9ca3af;"><?= $escaper->escapeHtml(__('ID:')) ?></span>
+                                        <?= $escaper->escapeHtml($currentCategory->getId()) ?></div>
+                                    <div style="margin-bottom: 4px;"><span
+                                                style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Name:')) ?></span>
+                                        <?= $escaper->escapeHtml($currentCategory->getName()) ?></div>
+                                    <div style="margin-bottom: 4px;"><span
+                                                style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Level:')) ?></span>
+                                        <?= $escaper->escapeHtml($currentCategory->getLevel()) ?></div>
+                                    <?php if ($currentCategory->getProductCount()): ?>
+                                        <div style="margin-bottom: 4px;"><span
+                                                    style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Products:')) ?></span>
+                                            <?= $escaper->escapeHtml($currentCategory->getProductCount()) ?></div>
+                                    <?php endif; ?>
+                                    <?php if ($currentCategory->getPath()): ?>
+                                        <div style="margin-bottom: 8px;"><span
+                                                    style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Path:')) ?></span>
+                                            <?= $escaper->escapeHtml($currentCategory->getPath()) ?></div>
+                                    <?php endif; ?>
+                                    <div style="border-top: 1px solid #4b5563; padding-top: 8px;">
+                                        <a href="<?= $escaper->escapeUrl($block->getCategoryEditUrl($currentCategory->getId())) ?>"
+                                           style="color: #86efac; text-decoration: none; font-size: 11px;"
+                                           onmouseover="this.style.color='#bbf7d0'"
+                                           onmouseout="this.style.color='#86efac'">
+                                            ✏️ <?= $escaper->escapeHtml(__('Edit Category')) ?>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
-                            
-                            <!-- Customers link -->
-                            <a href="<?= $escaper->escapeUrl($block->getCustomersUrl()) ?>"
-                               style="display: flex; align-items: center; padding: 8px 12px; color: inherit; text-decoration: none; font-size: 11px;"
-                               onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
-                               onmouseout="this.style.backgroundColor='transparent'">
-                                👤 <?= $escaper->escapeHtml(__('Customers')) ?>
-                            </a>
-                            
-                            <!-- Configuration link -->
-                            <a href="<?= $escaper->escapeUrl($block->getConfigUrl()) ?>"
-                               style="display: flex; align-items: center; padding: 8px 12px; color: inherit; text-decoration: none; font-size: 11px;"
-                               onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
-                               onmouseout="this.style.backgroundColor='transparent'">
-                                ⚙️ <?= $escaper->escapeHtml(__('Configuration')) ?>
-                            </a>
+                        </div>
+                    <?php endif; ?>
+                    <?php if ($currentCmsPage): ?>
+                        <div class="th-dropdown" style="position: relative; margin-right: 4px;">
+                            <button onclick="toggleDropdown('cms-dropdown')"
+                                    style="color: inherit; text-decoration: none; padding: 0 12px; height: 32px; display: inline-flex; align-items: center; background: none; border: none; cursor: pointer;"
+                                    onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                                    onmouseout="this.style.backgroundColor='transparent'">
+                                📄 <?= $escaper->escapeHtml(__('CMS Page')) ?> ▼
+                            </button>
+                            <div id="cms-dropdown" class="th-dropdown-content"
+                                 style="display: none; position: absolute; top: 32px; left: 0; background: #374151; border: 1px solid #4b5563; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); min-width: 280px; z-index: 10000;">
+                                <div style="padding: 12px; font-size: 11px;">
+                                    <div style="color: #c084fc; font-weight: 600; margin-bottom: 8px;">
+                                        <?= $escaper->escapeHtml(__('CMS Page Information')) ?>
+                                    </div>
+                                    <div style="margin-bottom: 4px;"><span
+                                                style="color: #9ca3af;"><?= $escaper->escapeHtml(__('ID:')) ?></span>
+                                        <?= $escaper->escapeHtml($currentCmsPage->getId()) ?></div>
+                                    <div style="margin-bottom: 4px;"><span
+                                                style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Title:')) ?></span>
+                                        <?= $escaper->escapeHtml($currentCmsPage->getTitle()) ?></div>
+                                    <div style="margin-bottom: 4px;"><span
+                                                style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Identifier:')) ?></span>
+                                        <?= $escaper->escapeHtml($currentCmsPage->getIdentifier()) ?></div>
+                                    <?php if ($currentCmsPage->getIsActive()): ?>
+                                        <div style="margin-bottom: 8px;"><span
+                                                    style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Status:')) ?></span>
+                                            <span
+                                                    style="color: #86efac;"><?= $escaper->escapeHtml(__('Active')) ?></span>
+                                        </div>
+                                    <?php else: ?>
+                                        <div style="margin-bottom: 8px;"><span
+                                                    style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Status:')) ?></span>
+                                            <span
+                                                    style="color: #f87171;"><?= $escaper->escapeHtml(__('Inactive')) ?></span>
+                                        </div>
+                                    <?php endif; ?>
+                                    <div style="border-top: 1px solid #4b5563; padding-top: 8px;">
+                                        <a href="<?= $escaper->escapeUrl($block->getCmsPageEditUrl($currentCmsPage->getId())) ?>"
+                                           style="color: #c084fc; text-decoration: none; font-size: 11px;"
+                                           onmouseover="this.style.color='#ddd6fe'"
+                                           onmouseout="this.style.color='#c084fc'">
+                                            ✏️ <?= $escaper->escapeHtml(__('Edit Page')) ?>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                    <?php if ($currentOrder): ?>
+                        <div class="th-dropdown" style="position: relative; margin-right: 4px;">
+                            <button onclick="toggleDropdown('order-dropdown')"
+                                    style="color: inherit; text-decoration: none; padding: 0 12px; height: 32px; display: inline-flex; align-items: center; background: none; border: none; cursor: pointer;"
+                                    onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                                    onmouseout="this.style.backgroundColor='transparent'">
+                                📋 <?= $escaper->escapeHtml(__('Order')) ?> ▼
+                            </button>
+                            <div id="order-dropdown" class="th-dropdown-content"
+                                 style="display: none; position: absolute; top: 32px; left: 0; background: #374151; border: 1px solid #4b5563; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); min-width: 280px; z-index: 10000;">
+                                <div style="padding: 12px; font-size: 11px;">
+                                    <div style="color: #60a5fa; font-weight: 600; margin-bottom: 8px;">
+                                        <?= $escaper->escapeHtml(__('Order Information')) ?>
+                                    </div>
+                                    <div style="margin-bottom: 4px;"><span
+                                                style="color: #9ca3af;"><?= $escaper->escapeHtml(__('ID:')) ?></span>
+                                        <?= $escaper->escapeHtml($currentOrder->getId()) ?></div>
+                                    <div style="margin-bottom: 4px;"><span
+                                                style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Increment ID:')) ?></span>
+                                        <?= $escaper->escapeHtml($currentOrder->getIncrementId()) ?></div>
+                                    <div style="margin-bottom: 4px;"><span
+                                                style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Date:')) ?></span>
+                                        <?= $escaper->escapeHtml($currentOrder->getCreatedAt()) ?></div>
+                                    <div style="margin-bottom: 4px;"><span
+                                                style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Status:')) ?></span>
+                                        <?= $escaper->escapeHtml($currentOrder->getStatusLabel()) ?></div>
+                                    <div style="margin-bottom: 8px;"><span
+                                                style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Grand Total:')) ?></span>
+                                        <?= $escaper->escapeHtml($currentOrder->getGrandTotal()) ?></div>
+                                    <div style="border-top: 1px solid #4b5563; padding-top: 8px;">
+                                        <a href="<?= $escaper->escapeUrl($block->getOrderViewUrl($currentOrder->getId())) ?>"
+                                           style="color: #60a5fa; text-decoration: none; font-size: 11px;"
+                                           onmouseover="this.style.color='#93c5fd'"
+                                           onmouseout="this.style.color='#60a5fa'">
+                                            👁️ <?= $escaper->escapeHtml(__('View Order in Admin')) ?>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- Invoice Dropdown -->
+                    <?php if ($currentInvoice): ?>
+                        <div class="th-dropdown" style="position: relative; margin-right: 4px;">
+                            <button onclick="toggleDropdown('invoice-dropdown')"
+                                    style="color: inherit; text-decoration: none; padding: 0 12px; height: 32px; display: inline-flex; align-items: center; background: none; border: none; cursor: pointer;"
+                                    onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                                    onmouseout="this.style.backgroundColor='transparent'">
+                                🧾 <?= $escaper->escapeHtml(__('Invoice')) ?> ▼
+                            </button>
+                            <div id="invoice-dropdown" class="th-dropdown-content"
+                                 style="display: none; position: absolute; top: 32px; left: 0; background: #374151; border: 1px solid #4b5563; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); min-width: 280px; z-index: 10000;">
+                                <div style="padding: 12px; font-size: 11px;">
+                                    <div style="color: #34d399; font-weight: 600; margin-bottom: 8px;">
+                                        <?= $escaper->escapeHtml(__('Invoice Information')) ?>
+                                    </div>
+                                    <div style="margin-bottom: 4px;"><span
+                                                style="color: #9ca3af;"><?= $escaper->escapeHtml(__('ID:')) ?></span>
+                                        <?= $escaper->escapeHtml($currentInvoice->getId()) ?></div>
+                                    <div style="margin-bottom: 4px;"><span
+                                                style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Increment ID:')) ?></span>
+                                        <?= $escaper->escapeHtml($currentInvoice->getIncrementId()) ?></div>
+                                    <div style="margin-bottom: 4px;"><span
+                                                style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Order ID:')) ?></span>
+                                        <?= $escaper->escapeHtml($currentInvoice->getOrderId()) ?></div>
+                                    <div style="margin-bottom: 4px;"><span
+                                                style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Date:')) ?></span>
+                                        <?= $escaper->escapeHtml($currentInvoice->getCreatedAt()) ?></div>
+                                    <div style="margin-bottom: 8px;"><span
+                                                style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Grand Total:')) ?></span>
+                                        <?= $escaper->escapeHtml($currentInvoice->getGrandTotal()) ?></div>
+                                    <div style="border-top: 1px solid #4b5563; padding-top: 8px;">
+                                        <a href="<?= $escaper->escapeUrl($block->getInvoiceViewUrl($currentInvoice->getId())) ?>"
+                                           style="color: #34d399; text-decoration: none; font-size: 11px;"
+                                           onmouseover="this.style.color='#6ee7b7'"
+                                           onmouseout="this.style.color='#34d399'">
+                                            👁️ <?= $escaper->escapeHtml(__('View Invoice in Admin')) ?>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                    <?php if ($currentShipment): ?>
+                        <div class="th-dropdown" style="position: relative; margin-right: 4px;">
+                            <button onclick="toggleDropdown('shipment-dropdown')"
+                                    style="color: inherit; text-decoration: none; padding: 0 12px; height: 32px; display: inline-flex; align-items: center; background: none; border: none; cursor: pointer;"
+                                    onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                                    onmouseout="this.style.backgroundColor='transparent'">
+                                🚚 <?= $escaper->escapeHtml(__('Shipment')) ?> ▼
+                            </button>
+                            <div id="shipment-dropdown" class="th-dropdown-content"
+                                 style="display: none; position: absolute; top: 32px; left: 0; background: #374151; border: 1px solid #4b5563; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); min-width: 280px; z-index: 10000;">
+                                <div style="padding: 12px; font-size: 11px;">
+                                    <div style="color: #f59e0b; font-weight: 600; margin-bottom: 8px;">
+                                        <?= $escaper->escapeHtml(__('Shipment Information')) ?>
+                                    </div>
+                                    <div style="margin-bottom: 4px;"><span
+                                                style="color: #9ca3af;"><?= $escaper->escapeHtml(__('ID:')) ?></span>
+                                        <?= $escaper->escapeHtml($currentShipment->getId()) ?></div>
+                                    <div style="margin-bottom: 4px;"><span
+                                                style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Increment ID:')) ?></span>
+                                        <?= $escaper->escapeHtml($currentShipment->getIncrementId()) ?></div>
+                                    <div style="margin-bottom: 4px;"><span
+                                                style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Order ID:')) ?></span>
+                                        <?= $escaper->escapeHtml($currentShipment->getOrderId()) ?></div>
+                                    <div style="margin-bottom: 4px;"><span
+                                                style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Date:')) ?></span>
+                                        <?= $escaper->escapeHtml($currentShipment->getCreatedAt()) ?></div>
+                                    <?php if ($currentShipment->getTotalQty()): ?>
+                                        <div style="margin-bottom: 8px;"><span
+                                                    style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Total Qty:')) ?></span>
+                                            <?= $escaper->escapeHtml($currentShipment->getTotalQty()) ?></div>
+                                    <?php endif; ?>
+                                    <div style="border-top: 1px solid #4b5563; padding-top: 8px;">
+                                        <a href="<?= $escaper->escapeUrl($block->getShipmentViewUrl($currentShipment->getId())) ?>"
+                                           style="color: #f59e0b; text-decoration: none; font-size: 11px;"
+                                           onmouseover="this.style.color='#fbbf24'"
+                                           onmouseout="this.style.color='#f59e0b'">
+                                            👁️ <?= $escaper->escapeHtml(__('View Shipment in Admin')) ?>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                    <?php if ($block->isCustomerLoggedIn() && ($currentCustomer = $block->getCurrentCustomer())): ?>
+                        <div class="th-dropdown" style="position: relative; margin-right: 4px;">
+                            <button onclick="toggleDropdown('customer-dropdown')"
+                                    style="color: inherit; text-decoration: none; padding: 0 12px; height: 32px; display: inline-flex; align-items: center; background: none; border: none; cursor: pointer;"
+                                    onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                                    onmouseout="this.style.backgroundColor='transparent'">
+                                👤 <?= $escaper->escapeHtml(__('Customer')) ?> ▼
+                            </button>
+                            <div id="customer-dropdown" class="th-dropdown-content"
+                                 style="display: none; position: absolute; top: 32px; left: 0; background: #374151; border: 1px solid #4b5563; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); min-width: 280px; z-index: 10000;">
+                                <div style="padding: 12px; font-size: 11px;">
+                                    <div style="color: #fb923c; font-weight: 600; margin-bottom: 8px;">
+                                        <?= $escaper->escapeHtml(__('Customer Information')) ?>
+                                    </div>
+                                    <div style="margin-bottom: 4px;"><span
+                                                style="color: #9ca3af;"><?= $escaper->escapeHtml(__('ID:')) ?></span>
+                                        <?= $escaper->escapeHtml($currentCustomer->getId()) ?></div>
+                                    <div style="margin-bottom: 4px;"><span
+                                                style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Name:')) ?></span>
+                                        <?= $escaper->escapeHtml($currentCustomer->getName()) ?></div>
+                                    <div style="margin-bottom: 4px;"><span
+                                                style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Email:')) ?></span>
+                                        <?= $escaper->escapeHtml($currentCustomer->getEmail()) ?></div>
+                                    <?php if ($currentCustomer->getCreatedAt()): ?>
+                                        <div style="margin-bottom: 4px;"><span
+                                                    style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Created:')) ?></span>
+                                            <?= $escaper->escapeHtml($currentCustomer->getCreatedAt()) ?></div>
+                                    <?php endif; ?>
+                                    <?php if ($currentCustomer->getGroupId()): ?>
+                                        <div style="margin-bottom: 8px;"><span
+                                                    style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Group ID:')) ?></span>
+                                            <?= $escaper->escapeHtml($currentCustomer->getGroupId()) ?></div>
+                                    <?php endif; ?>
+                                    <div style="border-top: 1px solid #4b5563; padding-top: 8px;">
+                                        <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account')) ?>"
+                                           style="color: #fb923c; text-decoration: none; font-size: 11px; margin-right: 10px;"
+                                           onmouseover="this.style.color='#fdba74'"
+                                           onmouseout="this.style.color='#fb923c'">
+                                            👁️ <?= $escaper->escapeHtml(__('View Account')) ?>
+                                        </a>
+                                        <a href="<?= $escaper->escapeUrl($block->getAdminUrl('customer/index/edit',
+                                            ['id' => $currentCustomer->getId()])) ?>"
+                                           style="color: #fb923c; text-decoration: none; font-size: 11px;"
+                                           onmouseover="this.style.color='#fdba74'"
+                                           onmouseout="this.style.color='#fb923c'">
+                                            ✏️ <?= $escaper->escapeHtml(__('Edit Customer')) ?>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                    <div class="th-dropdown" style="position: relative; margin-right: 4px;">
+                        <button onclick="toggleDropdown('tools-dropdown')"
+                                style="color: inherit; text-decoration: none; padding: 0 12px; height: 32px; display: inline-flex; align-items: center; background: none; border: none; cursor: pointer;"
+                                onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                                onmouseout="this.style.backgroundColor='transparent'">
+                            ⚙️ <?= $escaper->escapeHtml(__('Tools')) ?> ▼
+                        </button>
+                        <div id="tools-dropdown" class="th-dropdown-content"
+                             style="display: none; position: absolute; top: 32px; left: 0; background: #374151; border: 1px solid #4b5563; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); min-width: 200px; z-index: 10000;">
+                            <div style="padding: 4px 0;">
+                                <a href="<?= $escaper->escapeUrl($cacheManagementUrl) ?>"
+                                   style="display: flex; align-items: center; padding: 8px 12px; color: inherit; text-decoration: none; font-size: 11px;"
+                                   onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                                   onmouseout="this.style.backgroundColor='transparent'">
+                                    🔄 <?= $escaper->escapeHtml(__('Clear Cache')) ?>
+                                </a>
+                                <a href="<?= $escaper->escapeUrl($indexerManagementUrl) ?>"
+                                   style="display: flex; align-items: center; padding: 8px 12px; color: inherit; text-decoration: none; font-size: 11px;"
+                                   onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
+                                   onmouseout="this.style.backgroundColor='transparent'">
+                                    🗂️ <?= $escaper->escapeHtml(__('Reindex Data')) ?>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Product Dropdown -->
-                <?php if ($currentProduct): ?>
-                    <div class="th-dropdown" style="position: relative; margin-right: 4px;">
-                        <button onclick="toggleDropdown('product-dropdown')"
-                                style="color: inherit; text-decoration: none; padding: 0 12px; height: 32px; display: inline-flex; align-items: center; background: none; border: none; cursor: pointer;"
-                                onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
-                                onmouseout="this.style.backgroundColor='transparent'">
-                            📦 <?= $escaper->escapeHtml(__('Product')) ?> ▼
-                        </button>
-                        <div id="product-dropdown" class="th-dropdown-content" style="display: none; position: absolute; top: 32px; left: 0; background: #374151; border: 1px solid #4b5563; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); min-width: 280px; z-index: 10000;">
-                            <div style="padding: 12px; font-size: 11px;">
-                                <div style="color: #93c5fd; font-weight: 600; margin-bottom: 8px;"><?= $escaper->escapeHtml(__('Product Information')) ?></div>
-                                <div style="margin-bottom: 4px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('ID:')) ?></span> <?= $escaper->escapeHtml($currentProduct->getId()) ?></div>
-                                <div style="margin-bottom: 4px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('SKU:')) ?></span> <?= $escaper->escapeHtml($currentProduct->getSku()) ?></div>
-                                <div style="margin-bottom: 4px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Name:')) ?></span> <?= $escaper->escapeHtml($currentProduct->getName()) ?></div>
-                                <?php if ($currentProduct->getTypeId()): ?>
-                                    <div style="margin-bottom: 4px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Type:')) ?></span> <?= $escaper->escapeHtml(ucfirst($currentProduct->getTypeId())) ?></div>
-                                <?php endif; ?>
-                                <?php if ($currentProduct->getPrice()): ?>
-                                    <div style="margin-bottom: 8px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Price:')) ?></span> <?= $escaper->escapeHtml($currentProduct->getPrice()) ?></div>
-                                <?php endif; ?>
-                                <div style="border-top: 1px solid #4b5563; padding-top: 8px;">
-                                    <a href="<?= $escaper->escapeUrl($block->getProductEditUrl($currentProduct->getId())) ?>"
-                                       style="color: #93c5fd; text-decoration: none; font-size: 11px;"
-                                       onmouseover="this.style.color='#bfdbfe'"
-                                       onmouseout="this.style.color='#93c5fd'">
-                                        ✏️ <?= $escaper->escapeHtml(__('Edit Product')) ?>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
+                <!-- Spacer -->
+                <div style="flex: 1;"></div>
 
-                <!-- Category Dropdown -->
-                <?php if ($currentCategory): ?>
-                    <div class="th-dropdown" style="position: relative; margin-right: 4px;">
-                        <button onclick="toggleDropdown('category-dropdown')"
-                                style="color: inherit; text-decoration: none; padding: 0 12px; height: 32px; display: inline-flex; align-items: center; background: none; border: none; cursor: pointer;"
-                                onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
-                                onmouseout="this.style.backgroundColor='transparent'">
-                            📁 <?= $escaper->escapeHtml(__('Category')) ?> ▼
-                        </button>
-                        <div id="category-dropdown" class="th-dropdown-content" style="display: none; position: absolute; top: 32px; left: 0; background: #374151; border: 1px solid #4b5563; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); min-width: 280px; z-index: 10000;">
-                            <div style="padding: 12px; font-size: 11px;">
-                                <div style="color: #86efac; font-weight: 600; margin-bottom: 8px;"><?= $escaper->escapeHtml(__('Category Information')) ?></div>
-                                <div style="margin-bottom: 4px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('ID:')) ?></span> <?= $escaper->escapeHtml($currentCategory->getId()) ?></div>
-                                <div style="margin-bottom: 4px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Name:')) ?></span> <?= $escaper->escapeHtml($currentCategory->getName()) ?></div>
-                                <div style="margin-bottom: 4px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Level:')) ?></span> <?= $escaper->escapeHtml($currentCategory->getLevel()) ?></div>
-                                <?php if ($currentCategory->getProductCount()): ?>
-                                    <div style="margin-bottom: 4px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Products:')) ?></span> <?= $escaper->escapeHtml($currentCategory->getProductCount()) ?></div>
-                                <?php endif; ?>
-                                <?php if ($currentCategory->getPath()): ?>
-                                    <div style="margin-bottom: 8px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Path:')) ?></span> <?= $escaper->escapeHtml($currentCategory->getPath()) ?></div>
-                                <?php endif; ?>
-                                <div style="border-top: 1px solid #4b5563; padding-top: 8px;">
-                                    <a href="<?= $escaper->escapeUrl($block->getCategoryEditUrl($currentCategory->getId())) ?>"
-                                       style="color: #86efac; text-decoration: none; font-size: 11px;"
-                                       onmouseover="this.style.color='#bbf7d0'"
-                                       onmouseout="this.style.color='#86efac'">
-                                        ✏️ <?= $escaper->escapeHtml(__('Edit Category')) ?>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
-
-                <!-- CMS Page Dropdown -->
-                <?php if ($currentCmsPage): ?>
-                    <div class="th-dropdown" style="position: relative; margin-right: 4px;">
-                        <button onclick="toggleDropdown('cms-dropdown')"
-                                style="color: inherit; text-decoration: none; padding: 0 12px; height: 32px; display: inline-flex; align-items: center; background: none; border: none; cursor: pointer;"
-                                onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
-                                onmouseout="this.style.backgroundColor='transparent'">
-                            📄 <?= $escaper->escapeHtml(__('CMS Page')) ?> ▼
-                        </button>
-                        <div id="cms-dropdown" class="th-dropdown-content" style="display: none; position: absolute; top: 32px; left: 0; background: #374151; border: 1px solid #4b5563; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); min-width: 280px; z-index: 10000;">
-                            <div style="padding: 12px; font-size: 11px;">
-                                <div style="color: #c084fc; font-weight: 600; margin-bottom: 8px;"><?= $escaper->escapeHtml(__('CMS Page Information')) ?></div>
-                                <div style="margin-bottom: 4px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('ID:')) ?></span> <?= $escaper->escapeHtml($currentCmsPage->getId()) ?></div>
-                                <div style="margin-bottom: 4px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Title:')) ?></span> <?= $escaper->escapeHtml($currentCmsPage->getTitle()) ?></div>
-                                <div style="margin-bottom: 4px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Identifier:')) ?></span> <?= $escaper->escapeHtml($currentCmsPage->getIdentifier()) ?></div>
-                                <?php if ($currentCmsPage->getIsActive()): ?>
-                                    <div style="margin-bottom: 8px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Status:')) ?></span> <span style="color: #86efac;"><?= $escaper->escapeHtml(__('Active')) ?></span></div>
-                                <?php else: ?>
-                                    <div style="margin-bottom: 8px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Status:')) ?></span> <span style="color: #f87171;"><?= $escaper->escapeHtml(__('Inactive')) ?></span></div>
-                                <?php endif; ?>
-                                <div style="border-top: 1px solid #4b5563; padding-top: 8px;">
-                                    <a href="<?= $escaper->escapeUrl($block->getCmsPageEditUrl($currentCmsPage->getId())) ?>"
-                                       style="color: #c084fc; text-decoration: none; font-size: 11px;"
-                                       onmouseover="this.style.color='#ddd6fe'"
-                                       onmouseout="this.style.color='#c084fc'">
-                                        ✏️ <?= $escaper->escapeHtml(__('Edit Page')) ?>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
-
-                <!-- Order Dropdown -->
-                <?php if ($currentOrder): ?>
-                    <div class="th-dropdown" style="position: relative; margin-right: 4px;">
-                        <button onclick="toggleDropdown('order-dropdown')"
-                                style="color: inherit; text-decoration: none; padding: 0 12px; height: 32px; display: inline-flex; align-items: center; background: none; border: none; cursor: pointer;"
-                                onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
-                                onmouseout="this.style.backgroundColor='transparent'">
-                            📋 <?= $escaper->escapeHtml(__('Order')) ?> ▼
-                        </button>
-                        <div id="order-dropdown" class="th-dropdown-content" style="display: none; position: absolute; top: 32px; left: 0; background: #374151; border: 1px solid #4b5563; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); min-width: 280px; z-index: 10000;">
-                            <div style="padding: 12px; font-size: 11px;">
-                                <div style="color: #60a5fa; font-weight: 600; margin-bottom: 8px;"><?= $escaper->escapeHtml(__('Order Information')) ?></div>
-                                <div style="margin-bottom: 4px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('ID:')) ?></span> <?= $escaper->escapeHtml($currentOrder->getId()) ?></div>
-                                <div style="margin-bottom: 4px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Increment ID:')) ?></span> <?= $escaper->escapeHtml($currentOrder->getIncrementId()) ?></div>
-                                <div style="margin-bottom: 4px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Date:')) ?></span> <?= $escaper->escapeHtml($currentOrder->getCreatedAt()) ?></div>
-                                <div style="margin-bottom: 4px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Status:')) ?></span> <?= $escaper->escapeHtml($currentOrder->getStatusLabel()) ?></div>
-                                <div style="margin-bottom: 8px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Grand Total:')) ?></span> <?= $escaper->escapeHtml($currentOrder->getGrandTotal()) ?></div>
-                                <div style="border-top: 1px solid #4b5563; padding-top: 8px;">
-                                    <a href="<?= $escaper->escapeUrl($block->getOrderViewUrl($currentOrder->getId())) ?>"
-                                       style="color: #60a5fa; text-decoration: none; font-size: 11px;"
-                                       onmouseover="this.style.color='#93c5fd'"
-                                       onmouseout="this.style.color='#60a5fa'">
-                                        👁️ <?= $escaper->escapeHtml(__('View Order in Admin')) ?>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
-
-                <!-- Invoice Dropdown -->
-                <?php if ($currentInvoice): ?>
-                    <div class="th-dropdown" style="position: relative; margin-right: 4px;">
-                        <button onclick="toggleDropdown('invoice-dropdown')"
-                                style="color: inherit; text-decoration: none; padding: 0 12px; height: 32px; display: inline-flex; align-items: center; background: none; border: none; cursor: pointer;"
-                                onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
-                                onmouseout="this.style.backgroundColor='transparent'">
-                            🧾 <?= $escaper->escapeHtml(__('Invoice')) ?> ▼
-                        </button>
-                        <div id="invoice-dropdown" class="th-dropdown-content" style="display: none; position: absolute; top: 32px; left: 0; background: #374151; border: 1px solid #4b5563; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); min-width: 280px; z-index: 10000;">
-                            <div style="padding: 12px; font-size: 11px;">
-                                <div style="color: #34d399; font-weight: 600; margin-bottom: 8px;"><?= $escaper->escapeHtml(__('Invoice Information')) ?></div>
-                                <div style="margin-bottom: 4px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('ID:')) ?></span> <?= $escaper->escapeHtml($currentInvoice->getId()) ?></div>
-                                <div style="margin-bottom: 4px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Increment ID:')) ?></span> <?= $escaper->escapeHtml($currentInvoice->getIncrementId()) ?></div>
-                                <div style="margin-bottom: 4px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Order ID:')) ?></span> <?= $escaper->escapeHtml($currentInvoice->getOrderId()) ?></div>
-                                <div style="margin-bottom: 4px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Date:')) ?></span> <?= $escaper->escapeHtml($currentInvoice->getCreatedAt()) ?></div>
-                                <div style="margin-bottom: 8px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Grand Total:')) ?></span> <?= $escaper->escapeHtml($currentInvoice->getGrandTotal()) ?></div>
-                                <div style="border-top: 1px solid #4b5563; padding-top: 8px;">
-                                    <a href="<?= $escaper->escapeUrl($block->getInvoiceViewUrl($currentInvoice->getId())) ?>"
-                                       style="color: #34d399; text-decoration: none; font-size: 11px;"
-                                       onmouseover="this.style.color='#6ee7b7'"
-                                       onmouseout="this.style.color='#34d399'">
-                                        👁️ <?= $escaper->escapeHtml(__('View Invoice in Admin')) ?>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
-
-                <!-- Shipment Dropdown -->
-                <?php if ($currentShipment): ?>
-                    <div class="th-dropdown" style="position: relative; margin-right: 4px;">
-                        <button onclick="toggleDropdown('shipment-dropdown')"
-                                style="color: inherit; text-decoration: none; padding: 0 12px; height: 32px; display: inline-flex; align-items: center; background: none; border: none; cursor: pointer;"
-                                onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
-                                onmouseout="this.style.backgroundColor='transparent'">
-                            🚚 <?= $escaper->escapeHtml(__('Shipment')) ?> ▼
-                        </button>
-                        <div id="shipment-dropdown" class="th-dropdown-content" style="display: none; position: absolute; top: 32px; left: 0; background: #374151; border: 1px solid #4b5563; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); min-width: 280px; z-index: 10000;">
-                            <div style="padding: 12px; font-size: 11px;">
-                                <div style="color: #f59e0b; font-weight: 600; margin-bottom: 8px;"><?= $escaper->escapeHtml(__('Shipment Information')) ?></div>
-                                <div style="margin-bottom: 4px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('ID:')) ?></span> <?= $escaper->escapeHtml($currentShipment->getId()) ?></div>
-                                <div style="margin-bottom: 4px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Increment ID:')) ?></span> <?= $escaper->escapeHtml($currentShipment->getIncrementId()) ?></div>
-                                <div style="margin-bottom: 4px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Order ID:')) ?></span> <?= $escaper->escapeHtml($currentShipment->getOrderId()) ?></div>
-                                <div style="margin-bottom: 4px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Date:')) ?></span> <?= $escaper->escapeHtml($currentShipment->getCreatedAt()) ?></div>
-                                <?php if ($currentShipment->getTotalQty()): ?>
-                                    <div style="margin-bottom: 8px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Total Qty:')) ?></span> <?= $escaper->escapeHtml($currentShipment->getTotalQty()) ?></div>
-                                <?php endif; ?>
-                                <div style="border-top: 1px solid #4b5563; padding-top: 8px;">
-                                    <a href="<?= $escaper->escapeUrl($block->getShipmentViewUrl($currentShipment->getId())) ?>"
-                                       style="color: #f59e0b; text-decoration: none; font-size: 11px;"
-                                       onmouseover="this.style.color='#fbbf24'"
-                                       onmouseout="this.style.color='#f59e0b'">
-                                        👁️ <?= $escaper->escapeHtml(__('View Shipment in Admin')) ?>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
-
-                <!-- Customer Dropdown -->
-                <?php if ($block->isCustomerLoggedIn() && ($currentCustomer = $block->getCurrentCustomer())): ?>
-                    <div class="th-dropdown" style="position: relative; margin-right: 4px;">
-                        <button onclick="toggleDropdown('customer-dropdown')"
-                                style="color: inherit; text-decoration: none; padding: 0 12px; height: 32px; display: inline-flex; align-items: center; background: none; border: none; cursor: pointer;"
-                                onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
-                                onmouseout="this.style.backgroundColor='transparent'">
-                            👤 <?= $escaper->escapeHtml(__('Customer')) ?> ▼
-                        </button>
-                        <div id="customer-dropdown" class="th-dropdown-content" style="display: none; position: absolute; top: 32px; left: 0; background: #374151; border: 1px solid #4b5563; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); min-width: 280px; z-index: 10000;">
-                            <div style="padding: 12px; font-size: 11px;">
-                                <div style="color: #fb923c; font-weight: 600; margin-bottom: 8px;"><?= $escaper->escapeHtml(__('Customer Information')) ?></div>
-                                <div style="margin-bottom: 4px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('ID:')) ?></span> <?= $escaper->escapeHtml($currentCustomer->getId()) ?></div>
-                                <div style="margin-bottom: 4px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Name:')) ?></span> <?= $escaper->escapeHtml($currentCustomer->getName()) ?></div>
-                                <div style="margin-bottom: 4px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Email:')) ?></span> <?= $escaper->escapeHtml($currentCustomer->getEmail()) ?></div>
-                                <?php if ($currentCustomer->getCreatedAt()): ?>
-                                    <div style="margin-bottom: 4px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Created:')) ?></span> <?= $escaper->escapeHtml($currentCustomer->getCreatedAt()) ?></div>
-                                <?php endif; ?>
-                                <?php if ($currentCustomer->getGroupId()): ?>
-                                    <div style="margin-bottom: 8px;"><span style="color: #9ca3af;"><?= $escaper->escapeHtml(__('Group ID:')) ?></span> <?= $escaper->escapeHtml($currentCustomer->getGroupId()) ?></div>
-                                <?php endif; ?>
-                                <div style="border-top: 1px solid #4b5563; padding-top: 8px;">
-                                    <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account')) ?>"
-                                       style="color: #fb923c; text-decoration: none; font-size: 11px; margin-right: 10px;"
-                                       onmouseover="this.style.color='#fdba74'"
-                                       onmouseout="this.style.color='#fb923c'">
-                                        👁️ <?= $escaper->escapeHtml(__('View Account')) ?>
-                                    </a>
-                                    <a href="<?= $escaper->escapeUrl($block->getAdminUrl('customer/index/edit', ['id' => $currentCustomer->getId()])) ?>"
-                                       style="color: #fb923c; text-decoration: none; font-size: 11px;"
-                                       onmouseover="this.style.color='#fdba74'"
-                                       onmouseout="this.style.color='#fb923c'">
-                                        ✏️ <?= $escaper->escapeHtml(__('Edit Customer')) ?>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
-
-                <!-- Tools Dropdown -->
-                <div class="th-dropdown" style="position: relative; margin-right: 4px;">
-                    <button onclick="toggleDropdown('tools-dropdown')"
-                            style="color: inherit; text-decoration: none; padding: 0 12px; height: 32px; display: inline-flex; align-items: center; background: none; border: none; cursor: pointer;"
-                            onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
-                            onmouseout="this.style.backgroundColor='transparent'">
-                        ⚙️ <?= $escaper->escapeHtml(__('Tools')) ?> ▼
-                    </button>
-                    <div id="tools-dropdown" class="th-dropdown-content" style="display: none; position: absolute; top: 32px; left: 0; background: #374151; border: 1px solid #4b5563; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); min-width: 200px; z-index: 10000;">
-                        <div style="padding: 4px 0;">
-                            <a href="<?= $escaper->escapeUrl($cacheManagementUrl) ?>"
-                               style="display: flex; align-items: center; padding: 8px 12px; color: inherit; text-decoration: none; font-size: 11px;"
-                               onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
-                               onmouseout="this.style.backgroundColor='transparent'">
-                                🔄 <?= $escaper->escapeHtml(__('Clear Cache')) ?>
-                            </a>
-                            <a href="<?= $escaper->escapeUrl($indexerManagementUrl) ?>"
-                               style="display: flex; align-items: center; padding: 8px 12px; color: inherit; text-decoration: none; font-size: 11px;"
-                               onmouseover="this.style.backgroundColor='rgba(255,255,255,0.1)'"
-                               onmouseout="this.style.backgroundColor='transparent'">
-                                🗂️ <?= $escaper->escapeHtml(__('Reindex Data')) ?>
-                            </a>
-                        </div>
-                    </div>
+                <!-- User info -->
+                <div style="display: flex; align-items: center;">
+                    <span id="th-admin-username" style="opacity: 0.8; display: none;">
+                        <?= $escaper->escapeHtml(__('Hello, ')) ?><span id="th-username-text"></span>
+                    </span>
                 </div>
-            </div>
-
-            <!-- Spacer -->
-            <div style="flex: 1;"></div>
-
-            <!-- User info -->
-            <div style="display: flex; align-items: center;">
-                <span id="th-admin-username" style="opacity: 0.8; display: none;">
-                    <?= $escaper->escapeHtml(__('Hello, ')) ?><span id="th-username-text"></span>
-                </span>
             </div>
         </div>
+
+
     </div>
 
-
-</div>
-
-<script type="text/x-magento-init">
-{
-    "*": {
-        "TH_Adminbar/js/adminbar": {
-            "statusUrl": "<?= $escaper->escapeJs($statusUrl) ?>"
-        }
-    }
-}
-</script>
-
-<script>
-// Dropdown functionality
-var currentOpenDropdown = null;
-
-function toggleDropdown(dropdownId) {
-    var dropdown = document.getElementById(dropdownId);
-    if (!dropdown) return;
-
-    // Close any currently open dropdown
-    if (currentOpenDropdown && currentOpenDropdown !== dropdown) {
-        currentOpenDropdown.style.display = 'none';
-    }
-
-    // Toggle the clicked dropdown
-    if (dropdown.style.display === 'none' || dropdown.style.display === '') {
-        dropdown.style.display = 'block';
-        currentOpenDropdown = dropdown;
-    } else {
-        dropdown.style.display = 'none';
-        currentOpenDropdown = null;
-    }
-}
-
-// Close dropdowns when clicking outside
-document.addEventListener('click', function(event) {
-    if (!event.target.closest('.th-dropdown')) {
-        if (currentOpenDropdown) {
-            currentOpenDropdown.style.display = 'none';
-            currentOpenDropdown = null;
-        }
-    }
-});
-
-// Simple initialization for Luma theme
-document.addEventListener('DOMContentLoaded', function() {
-    if (window.thAdminBarData) {
-        window.thAdminBarData.init();
-        // Show the bar if conditions are met
-        setTimeout(function() {
-            if (window.thAdminBarData.visible) {
-                document.getElementById('th-adminbar').style.display = 'block';
-
-                // Update username if available
-                if (window.thAdminBarData.userName) {
-                    document.getElementById('th-username-text').textContent = window.thAdminBarData.userName;
-                    document.getElementById('th-admin-username').style.display = 'block';
+    <script type="text/x-magento-init">
+        {
+            "*": {
+                "TH_Adminbar/js/adminbar": {
+                    "statusUrl": "<?= $escaper->escapeJs($statusUrl) ?>"
                 }
             }
-        }, 100);
-    }
-});
-</script>
+        }
+    </script>
+    <script>
+        var currentOpenDropdown = null;
+
+        function toggleDropdown(dropdownId) {
+            var dropdown = document.getElementById(dropdownId);
+            if (!dropdown) return;
+
+            if (currentOpenDropdown && currentOpenDropdown !== dropdown) {
+                currentOpenDropdown.style.display = 'none';
+            }
+
+            if (dropdown.style.display === 'none' || dropdown.style.display === '') {
+                dropdown.style.display = 'block';
+                currentOpenDropdown = dropdown;
+            } else {
+                dropdown.style.display = 'none';
+                currentOpenDropdown = null;
+            }
+        }
+
+        document.addEventListener('click', function (event) {
+            if (!event.target.closest('.th-dropdown')) {
+                if (currentOpenDropdown) {
+                    currentOpenDropdown.style.display = 'none';
+                    currentOpenDropdown = null;
+                }
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            if (window.thAdminBarData) {
+                window.thAdminBarData.init();
+                setTimeout(function () {
+                    if (window.thAdminBarData.visible) {
+                        document.getElementById('th-adminbar').style.display = 'block';
+                        if (window.thAdminBarData.userName) {
+                            document.getElementById('th-username-text').textContent = window.thAdminBarData.userName;
+                            document.getElementById('th-admin-username').style.display = 'block';
+                        }
+                    }
+                }, 100);
+            }
+        });
+    </script>

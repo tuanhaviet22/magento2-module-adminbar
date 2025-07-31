@@ -1,25 +1,35 @@
 <?php
+/*
+ *  @author    TuanHa
+ *  @copyright Copyright (c) 2025 Tuan Ha <https://www.tuanha.dev/>
+ *
+ */
+
 declare(strict_types=1);
 
 namespace TH\Adminbar\Block;
 
-use Magento\Framework\View\Element\Template;
-use Magento\Framework\View\Element\Template\Context;
+use Exception;
+use Magento\Authorization\Model\UserContextInterface;
 use Magento\Backend\Model\Auth\Session as AdminSession;
+use Magento\Catalog\Model\Category;
+use Magento\Catalog\Model\Product;
+use Magento\Cms\Api\Data\PageInterface;
+use Magento\Cms\Api\PageRepositoryInterface;
+use Magento\Cms\Model\Page as CmsPage;
+use Magento\Customer\Model\Session as CustomerSession;
+use Magento\Framework\App\DeploymentConfig;
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\State as AppState;
 use Magento\Framework\Registry;
 use Magento\Framework\UrlInterface;
-use Magento\Cms\Api\PageRepositoryInterface;
-use Magento\Customer\Model\Session as CustomerSession;
-use Magento\Authorization\Model\UserContextInterface;
-use Magento\Framework\App\ObjectManager;
-use Magento\Framework\App\DeploymentConfig;
-use Magento\Framework\App\RequestInterface;
-use Magento\Cms\Api\Data\PageInterface;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\Element\Template\Context;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Invoice;
+use Magento\Sales\Model\Order\Shipment;
 use TH\Adminbar\Helper\Data as AdminbarHelper;
-use Magento\Catalog\Model\Product;
-use Magento\Catalog\Model\Category;
-use Magento\Cms\Model\Page as CmsPage;
 
 /**
  * Admin Bar Block
@@ -165,7 +175,6 @@ class Adminbar extends Template
      */
     public function getCurrentCmsPage(): ?CmsPage
     {
-        // Try multiple possible registry keys for CMS pages
         $cmsPage = $this->registry->registry('cms_page');
         if (!$cmsPage) {
             $cmsPage = $this->registry->registry('current_cms_page');
@@ -174,7 +183,6 @@ class Adminbar extends Template
             $cmsPage = $this->registry->registry('current_page');
         }
 
-        // If still not found, try to detect CMS page by request
         if (!$cmsPage) {
             $cmsPage = $this->detectCmsPageFromRequest();
         }
@@ -190,31 +198,25 @@ class Adminbar extends Template
     private function detectCmsPageFromRequest(): ?CmsPage
     {
         try {
-            // Check if we're on a CMS page by looking at the request
             $moduleName = $this->request->getModuleName();
             $controllerName = $this->request->getControllerName();
             $actionName = $this->request->getActionName();
 
-            // CMS pages typically use cms/page/view or cms/index/index
             if ($moduleName === 'cms' &&
                 (($controllerName === 'page' && $actionName === 'view') ||
-                 ($controllerName === 'index' && $actionName === 'index'))) {
+                    ($controllerName === 'index' && $actionName === 'index'))) {
 
-                // Get page identifier from request
                 $pageId = $this->request->getParam('page_id');
                 $identifier = $this->request->getParam('id');
 
                 if ($pageId) {
-                    // Load by page ID
                     return $this->pageRepository->getById($pageId);
                 } elseif ($identifier) {
-                    // Load by identifier
                     $storeId = $this->_storeManager->getStore()->getId();
                     return $this->pageRepository->getByIdentifier($identifier, $storeId);
                 }
             }
-        } catch (\Exception $e) {
-            // Silently fail and return null
+        } catch (Exception $e) {
         }
 
         return null;
@@ -225,7 +227,7 @@ class Adminbar extends Template
      *
      * @return \Magento\Sales\Model\Order|null
      */
-    public function getCurrentOrder(): ?\Magento\Sales\Model\Order
+    public function getCurrentOrder(): ?Order
     {
         return $this->registry->registry('current_order');
     }
@@ -235,7 +237,7 @@ class Adminbar extends Template
      *
      * @return \Magento\Sales\Model\Order\Invoice|null
      */
-    public function getCurrentInvoice(): ?\Magento\Sales\Model\Order\Invoice
+    public function getCurrentInvoice(): ?Invoice
     {
         return $this->registry->registry('current_invoice');
     }
@@ -245,7 +247,7 @@ class Adminbar extends Template
      *
      * @return \Magento\Sales\Model\Order\Shipment|null
      */
-    public function getCurrentShipment(): ?\Magento\Sales\Model\Order\Shipment
+    public function getCurrentShipment(): ?Shipment
     {
         return $this->registry->registry('current_shipment');
     }
@@ -448,18 +450,14 @@ class Adminbar extends Template
     private function getAdminUrl(string $route, array $params = []): string
     {
         try {
-            // Get admin frontName from deployment config
             $adminFrontName = $this->getAdminFrontName();
             if (!$adminFrontName) {
-                // Fallback to default if frontName not found
                 return $this->urlBuilder->getUrl($route, $params);
             }
 
-            // Build admin URL with dynamic frontName
             $baseUrl = $this->urlBuilder->getBaseUrl();
             $routePath = ltrim($route, '/');
 
-            // Build query string if params exist
             $queryString = '';
             if (!empty($params)) {
                 $queryString = '?' . http_build_query($params);
@@ -467,8 +465,7 @@ class Adminbar extends Template
 
             return rtrim($baseUrl, '/') . '/' . $adminFrontName . '/' . $routePath . '/' . $queryString;
 
-        } catch (\Exception $e) {
-            // Fallback to standard URL generation if something fails
+        } catch (Exception $e) {
             return $this->urlBuilder->getUrl($route, $params);
         }
     }
@@ -483,7 +480,7 @@ class Adminbar extends Template
         try {
             $backendConfig = $this->deploymentConfig->get('backend');
             return $backendConfig['frontName'] ?? null;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return null;
         }
     }

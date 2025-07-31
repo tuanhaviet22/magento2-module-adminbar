@@ -1,13 +1,21 @@
 <?php
+/*
+ *  @author    TuanHa
+ *  @copyright Copyright (c) 2025 Tuan Ha <https://www.tuanha.dev/>
+ *
+ */
+
 declare(strict_types=1);
 
 namespace TH\Adminbar\Controller\Auth;
 
+use Exception;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\ActionInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Stdlib\CookieManagerInterface;
-use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
 use TH\Adminbar\Helper\Data as AdminbarHelper;
 
 /**
@@ -95,7 +103,7 @@ class Status implements ActionInterface, HttpGetActionInterface
                 'message' => 'Admin session not found'
             ]);
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $resultJson->setData([
                 'success' => false,
                 'isLoggedIn' => false,
@@ -126,7 +134,7 @@ class Status implements ActionInterface, HttpGetActionInterface
             $adminData = json_decode($decodedData, true);
             return is_array($adminData) ? $adminData : null;
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return null;
         }
     }
@@ -173,13 +181,13 @@ class Status implements ActionInterface, HttpGetActionInterface
             // Path: admin/security/session_lifetime
             $sessionLifetime = $this->scopeConfig->getValue(
                 'admin/security/session_lifetime',
-                \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                ScopeInterface::SCOPE_STORE
             );
 
             // Default to 7200 seconds (2 hours) if not configured
             return (int)$sessionLifetime ?: 7200;
 
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Default fallback: 2 hours
             return 7200;
         }

@@ -1,4 +1,10 @@
 <?xml version="1.0"?>
+<!--
+  ~  @author    TuanHa
+  ~  @copyright Copyright (c) 2025 Tuan Ha <https://www.tuanha.dev/>
+  ~
+  -->
+
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
     <event name="backend_auth_user_login_success">
         <observer name="th_adminbar_admin_login" instance="TH\Adminbar\Observer\AdminLoginObserver" />

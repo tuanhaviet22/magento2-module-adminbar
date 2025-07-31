@@ -1,11 +1,17 @@
 <?php
+/*
+ *  @author    TuanHa
+ *  @copyright Copyright (c) 2025 Tuan Ha <https://www.tuanha.dev/>
+ *
+ */
+
 declare(strict_types=1);
 
 namespace TH\Adminbar\Observer;
 
+use Exception;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
-use TH\Adminbar\Observer\AdminLoginObserver;
 
 /**
  * Observer to track admin activity and refresh cookie
@@ -39,7 +45,7 @@ class AdminActivityObserver implements ObserverInterface
         try {
             // Refresh the admin cookie to extend its lifetime
             $this->adminLoginObserver->refreshAdminCookie();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Silently fail to avoid breaking admin functionality
         }
     }

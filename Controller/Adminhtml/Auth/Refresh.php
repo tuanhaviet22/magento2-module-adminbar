@@ -1,8 +1,15 @@
 <?php
+/*
+ *  @author    TuanHa
+ *  @copyright Copyright (c) 2025 Tuan Ha <https://www.tuanha.dev/>
+ *
+ */
+
 declare(strict_types=1);
 
 namespace TH\Adminbar\Controller\Adminhtml\Auth;
 
+use Exception;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\Action\HttpPostActionInterface;
@@ -53,17 +60,13 @@ class Refresh extends Action implements HttpPostActionInterface
     public function execute()
     {
         $resultJson = $this->resultJsonFactory->create();
-        
         try {
-            // Refresh the admin cookie
             $this->adminLoginObserver->refreshAdminCookie();
-            
             return $resultJson->setData([
                 'success' => true,
                 'message' => 'Cookie refreshed successfully'
             ]);
-            
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $resultJson->setData([
                 'success' => false,
                 'message' => 'Failed to refresh cookie'

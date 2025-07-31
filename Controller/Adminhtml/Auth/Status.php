@@ -1,13 +1,20 @@
 <?php
+/*
+ *  @author    TuanHa
+ *  @copyright Copyright (c) 2025 Tuan Ha <https://www.tuanha.dev/>
+ *
+ */
+
 declare(strict_types=1);
 
 namespace TH\Adminbar\Controller\Adminhtml\Auth;
 
+use Exception;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
+use Magento\Backend\Model\Auth\Session as AdminSession;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\Controller\Result\JsonFactory;
-use Magento\Backend\Model\Auth\Session as AdminSession;
 use Magento\Framework\Session\SessionManagerInterface;
 use TH\Adminbar\Helper\Data as AdminbarHelper;
 
@@ -72,7 +79,7 @@ class Status extends Action implements HttpGetActionInterface
     public function execute()
     {
         $resultJson = $this->resultJsonFactory->create();
-        
+
         try {
             $isLoggedIn = $this->adminSession->isLoggedIn();
             $shouldShow = $this->adminbarHelper->shouldShowForAdmin();
@@ -102,8 +109,8 @@ class Status extends Action implements HttpGetActionInterface
             }
 
             return $resultJson->setData($response);
-            
-        } catch (\Exception $e) {
+
+        } catch (Exception $e) {
             return $resultJson->setData([
                 'success' => false,
                 'isLoggedIn' => false,

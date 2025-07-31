@@ -1,13 +1,20 @@
 <?php
+/*
+ *  @author    TuanHa
+ *  @copyright Copyright (c) 2025 Tuan Ha <https://www.tuanha.dev/>
+ *
+ */
+
 declare(strict_types=1);
 
 namespace TH\Adminbar\Observer;
 
+use Exception;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Session\SessionManagerInterface;
-use Magento\Framework\Stdlib\CookieManagerInterface;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
+use Magento\Framework\Stdlib\CookieManagerInterface;
 
 /**
  * Observer to track admin logout for admin bar functionality
@@ -64,7 +71,7 @@ class AdminLogoutObserver implements ObserverInterface
                 'th_admin_bar_auth',
                 $cookieMetadata
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Silently fail to avoid breaking admin logout
         }
     }

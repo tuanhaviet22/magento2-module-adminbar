@@ -1,9 +1,15 @@
+/*
+ *  @author    TuanHa
+ *  @copyright Copyright (c) 2025 Tuan Ha <https://www.tuanha.dev/>
+ *
+ */
+
 define([
     'jquery'
 ], function ($) {
     'use strict';
-    
-    return function(config) {
+
+    return function (config) {
         return {
             init() {
                 // Initialize admin bar data for templates
@@ -14,23 +20,21 @@ define([
                     userName: null,
                     isLoading: true,
                     visible: false,
-                    
+
                     // Initialize the component
                     init() {
                         this.checkAdminStatus();
                         this.startPeriodicRefresh();
                     },
-                    
+
                     // Check admin authentication status
                     checkAdminStatus() {
                         this.isLoading = true;
-                        
+
                         fetch(config.statusUrl, {
                             method: 'GET',
                             credentials: 'same-origin'
-                        })
-                        .then(response => response.json())
-                        .then(data => {
+                        }).then(response => response.json()).then(data => {
                             if (data.success) {
                                 this.isLoggedIn = data.isLoggedIn;
                                 this.shouldShow = data.shouldShow;
@@ -43,23 +47,22 @@ define([
                                 this.visible = false;
                             }
                             this.isLoading = false;
-                        })
-                        .catch(error => {
+                        }).catch(error => {
                             console.error('TH Admin Bar: Status check failed:', error);
                             this.isLoading = false;
                         });
                     },
-                    
+
                     // Toggle admin bar visibility
                     toggle() {
                         this.visible = !this.visible;
                     },
-                    
+
                     // Hide admin bar
                     hide() {
                         this.visible = false;
                     },
-                    
+
                     // Show admin bar
                     show() {
                         this.visible = true;
@@ -84,16 +87,13 @@ define([
                                 'Content-Type': 'application/json',
                                 'X-Requested-With': 'XMLHttpRequest'
                             }
-                        })
-                        .then(response => response.json())
-                        .then(data => {
+                        }).then(response => response.json()).then(data => {
                             if (data.success) {
                                 console.log('TH Admin Bar: Session refreshed successfully');
                             } else {
                                 console.warn('TH Admin Bar: Failed to refresh session');
                             }
-                        })
-                        .catch(error => {
+                        }).catch(error => {
                             console.error('TH Admin Bar: Refresh failed:', error);
                         });
                     }

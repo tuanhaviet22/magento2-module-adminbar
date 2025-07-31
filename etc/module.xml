@@ -1,12 +1,18 @@
 <?xml version="1.0"?>
+<!--
+  ~  @author    TuanHa
+  ~  @copyright Copyright (c) 2025 Tuan Ha <https://www.tuanha.dev/>
+  ~
+  -->
+
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
     <module name="TH_Adminbar" setup_version="1.0.0">
         <sequence>
-            <module name="Magento_Theme"/>
-            <module name="Magento_Backend"/>
-            <module name="Magento_Customer"/>
-            <module name="Magento_Catalog"/>
-            <module name="Magento_Cms"/>
+            <module name="Magento_Theme" />
+            <module name="Magento_Backend" />
+            <module name="Magento_Customer" />
+            <module name="Magento_Catalog" />
+            <module name="Magento_Cms" />
         </sequence>
     </module>
 </config>
